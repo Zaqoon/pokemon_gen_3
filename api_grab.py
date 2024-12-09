@@ -6,22 +6,20 @@ import json
 import os
 import shutil
 
-from poke_data_improved2 import Card_Data
-from villagers5 import sets
+from dotenv import load_dotenv
+from poke_data import Card_Data
+from villagers import sets
 
+load_dotenv()
+API_KEY = os.getenv('API_KEY')
+RestClient.configure(API_KEY)
 
-RestClient.configure('3f9fba22-cc72-487d-a8fc-e1e5ba5744fc')
+target_set_list = ["ex1", "ex2", "ex3", "ex4", "np", "ex5", "ex6", "ex7", "ex8",
+                   "ex9", "ex10", "ex11", "ex12", "ex13", "ex14", "ex15", "ex16"]
 
+#target_set_list = ["ex1"]
 
-targetSetList = ["ex1", "ex2", "ex3", "ex4", "np", "ex5", "ex6", "ex7", "ex8", "ex9", "ex10", "ex11", "ex12", "ex13", "ex14", "ex15", "ex16"]
-#targetSetList = ["ex1"]
-
-card_data = {
-    "ex1": [],  "ex2": [],  "ex3": [],  "ex4": [],  "ex5": [],
-    "ex6": [],  "ex7": [],  "ex8": [],  "ex9": [], "ex10": [],
-    "ex11": [], "ex12": [], "ex13": [], "ex14": [], "ex15": [],
-    "ex16": [], "np": []
-}
+card_data = {gen: [] for gen in target_set_list}
 
 
 set_name = {
@@ -244,13 +242,7 @@ def populateCard_Data(target):
 
 
 def add_entry(pokeTag, weight_dict):
-    newEntry =  {
-          "type": "item",
-          "weight": 1,
-          "name": "minecraft:filled_map",
-          "functions": []
-        }
-    newEntry["functions"] = pokeTag[0]
+    newEntry = {"type": "item", "weight": 1, "name": "minecraft:filled_map", "functions": pokeTag[0]}
     if loot_table == "Premium_rare":
         weight = weight_dict[pokeTag[1]]
         try:
@@ -358,7 +350,7 @@ def deck_special_cards(type_specific_cards:dict):
             file.write(file_dict)
 
 
-populateCard_Data(targetSetList)
+populateCard_Data(target_set_list)
 
 if __name__ == "__main__":
     energy_list = ["Fighting Energy", "Fire Energy", "Grass Energy", "Lightning Energy", "Psychic Energy", "Water Energy"]
@@ -373,7 +365,7 @@ if __name__ == "__main__":
             "Darkness": [],
             "Metal": []
         }
-    for set in targetSetList:
+    for set in target_set_list:
         print(f"Creating loot table for {set} ...")
         if os.path.exists(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}"):
             shutil.rmtree(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}")

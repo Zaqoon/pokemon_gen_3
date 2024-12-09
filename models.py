@@ -11,7 +11,7 @@ import json
 import os
 import shutil
 
-from poke_data_gen3 import PokeData
+from poke_data import Card_Data
 
 
 RestClient.configure('3f9fba22-cc72-487d-a8fc-e1e5ba5744fc')

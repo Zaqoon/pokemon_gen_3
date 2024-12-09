@@ -1,4 +1,4 @@
-from poke_data_gen3 import PokeData
+from poke_data import Card_Data
 
 import pokemontcgsdk
 from pokemontcgsdk import Card

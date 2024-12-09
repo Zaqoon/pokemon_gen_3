@@ -5,9 +5,9 @@ import json
 import shutil
 from typing import List
 
-from villager_data2 import VillagerData
-from villager_data2 import TrainerData
-from villager_data2 import EnergyData
+from villager_data import VillagerData
+from villager_data import TrainerData
+from villager_data import EnergyData
 
 
 sets = {

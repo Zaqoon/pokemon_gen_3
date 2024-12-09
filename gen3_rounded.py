@@ -1,7 +1,7 @@
 import win32com.client
 import os
 import re
-from poke_data import PokeData
+from poke_data import Card_Data
 
 import requests
 import keyboard
