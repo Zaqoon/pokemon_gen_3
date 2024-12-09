@@ -647,8 +647,7 @@ class Card_Data():
     static_poke_num_cntr = 0
     promo_poke_num_cntr = 0
 
-
-    def __init__(self, card:Card) -> None:
+    def __init__(self, card: Card) -> None:
         if card.rarity is not None and card.name.replace(" Energy", "") not in energy_type_dict:
             if card.rarity == "Promo":
                 Card_Data.promo_poke_num_cntr += 1
@@ -709,7 +708,6 @@ class Card_Data():
 
         self.functions = [self.set_components, self.set_name, self.set_lore]
 
-
     def generate_components(self):
         lore_lines = []
         if self.supertype == "Pokémon":
@@ -726,5 +724,3 @@ class Card_Data():
                 energy_trainer_cards[self.name] = self.functions
             else:
                 self.functions = energy_trainer_cards[self.name]
-
-
