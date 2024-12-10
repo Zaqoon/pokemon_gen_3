@@ -16,7 +16,8 @@ def export_decks(path: str):
             shutil.rmtree(destination)
         # Move folder
         source = f'{origin_path}/{folder}'
-        copy_paste_folder(source, path)
+        destination_path = f'{path}/{folder}'
+        copy_paste_folder(source, destination_path)
 
 
 def export_boosters(path: str):
@@ -26,7 +27,7 @@ def export_boosters(path: str):
     if os.path.exists(destination):
         shutil.rmtree(destination)
     # Paste boosters
-    copy_paste_folder(source, f'{path}/gen3_boosters/')
+    copy_paste_folder(source, f'{path}/gen3_boosters/function')
 
 
 def export_expansion_files(path: str):
@@ -42,6 +43,7 @@ def export_expansion_files(path: str):
 def copy_paste_file(source: str, destination: str):
     if os.path.isfile(source):
         shutil.copy2(source, destination)
+        print(f'Successfully transferred {source} to {destination}.')
     else:
         print(f'{source} is not a file.')
 
@@ -49,6 +51,7 @@ def copy_paste_file(source: str, destination: str):
 def copy_paste_folder(source: str, destination: str):
     try:
         shutil.copytree(source, destination)
+        print(f'Successfully transferred {source} to {destination}.')
     except FileExistsError:
         print(f'{destination} already exists.')
     except Exception as e:
@@ -57,4 +60,6 @@ def copy_paste_folder(source: str, destination: str):
 
 if __name__ == '__main__':
     destination = f'C:/Users/{USER}/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data'
-
+    export_decks(destination)
+    export_boosters(destination)
+    export_expansion_files(destination)
