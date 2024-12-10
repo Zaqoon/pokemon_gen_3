@@ -454,7 +454,8 @@ def construct_deck_files(total_files, total_decks) -> None:
     for i in range(1, total_decks + 1):
         base_path = paths[0][:-1]
         new_path = base_path + f"{+ i}"
-        if new_path not in paths: paths.append(new_path)
+        if new_path not in paths:
+            paths.append(new_path)
     for path in paths:
         if os.path.exists(path):
             shutil.rmtree(path)

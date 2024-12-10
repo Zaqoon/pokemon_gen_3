@@ -1,11 +1,16 @@
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+USER = os.getenv('USER')
 
 # Load the filled_map.json from the first location
 with open('C:/Users/Andreas/Desktop/pip_code/models/filled_map.json', 'r') as source_file:
     source_data = json.load(source_file)
 
 # Load the filled_map.json from the second location
-with open('C:/Users/Andreas/AppData/Roaming/.minecraft/resourcepacks/Pokemon 4.0/assets/minecraft/models/item/filled_map.json', 'r') as target_file:
+with open(f'C:/Users/{USER}/AppData/Roaming/.minecraft/resourcepacks/Pokemon 4.0/assets/minecraft/models/item/filled_map.json', 'r') as target_file:
     target_data = json.load(target_file)
 
 # Replace the predicate data in the target data
@@ -35,5 +40,5 @@ for source_predicate in source_data['overrides']:
 target_data['overrides'] = sorted(target_data['overrides'], key=lambda x: x['predicate']['custom_model_data'])
 
 # Save the modified target data
-with open('C:/Users/Andreas/AppData/Roaming/.minecraft/resourcepacks/Pokemon 4.0/assets/minecraft/models/item/filled_map.json', 'w') as target_file:
+with open(f'C:/Users/{USER}/AppData/Roaming/.minecraft/resourcepacks/Pokemon 4.0/assets/minecraft/models/item/filled_map.json', 'w') as target_file:
     json.dump(target_data, target_file, indent=1)
