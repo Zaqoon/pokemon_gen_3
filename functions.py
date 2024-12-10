@@ -2,9 +2,12 @@ import os
 import shutil
 from typing import List
 
-target_set_list = ["ex1", "ex2", "ex3", "ex4", "ex5", "ex6", "ex7", "ex8", "ex9", "ex10", "ex11", "ex12", "ex13", "ex14", "ex15", "ex16"]
+target_set_list = ["ex1", "ex2", "ex3", "ex4", "ex5", "ex6", "ex7", "ex8",
+                   "ex9", "ex10", "ex11", "ex12", "ex13", "ex14", "ex15", "ex16"]
 
-file_directory = f"C:/Users/Andreas/Desktop/pip_code/tcg_functions"
+file_directory = 'functions'
+if not os.path.exists(file_directory):
+    os.makedirs(file_directory)
 
 pull_rate_dict = {
     "ex1": {"Common": 4, "Uncommon": 2, "Reverse": 1, "Rare": 1, "Premium": 1},
@@ -27,7 +30,8 @@ pull_rate_dict = {
 
 booster_score = {
     "ex1": 100, "ex2": 200, "ex3": 300, "ex4": 400, "ex5": 500, "ex6": 600, "ex7": 700, "ex8": 800, 
-    "ex9": 900, "ex10": 1000, "ex11": 1100, "ex12": 1200, "ex13": 1300, "ex14": 1400, "ex15": 1500, "ex16": 1600, "np": 1700
+    "ex9": 900, "ex10": 1000, "ex11": 1100, "ex12": 1200, "ex13": 1300, "ex14": 1400, "ex15": 1500, "ex16": 1600,
+    "np": 1700
 }
 
 
@@ -44,7 +48,7 @@ template = {
 }
 
 
-def insert_functions(directory:str, rarity:str, pull_rate:int, start:int, booster:int, lines:List[str]) -> list:
+def insert_functions(directory:str, rarity:str, pull_rate:int, start:int, booster:int, lines:List[str]) -> tuple:
     for n in range(start, pull_rate):
         file_directory = f"{directory}/{n}.mcfunction"
         with open(file_directory, "w") as file:
