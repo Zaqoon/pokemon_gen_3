@@ -10,152 +10,9 @@ from villager_data import TrainerData
 from villager_data import EnergyData
 
 
-sets = {
-    "ex1": {
-        "name": "EX Ruby & Sapphire",
-        "date": "July 18, 2003",
-        "color": "red",
-        "custom_model_data": [3001, 3002, 3003],
-        "max_uses": 10,
-        "deck_set": True,
-        "weight": 10000
-    },
-    "ex2": {
-        "name": "EX Sandstorm",
-        "date": "September 18, 2003",
-        "color": "#D2B48C",
-        "custom_model_data": [3011, 3012, 3013],
-        "max_uses": 10,
-        "deck_set": True,
-        "weight": 9000
-    },
-    "ex3": {
-        "name": "EX Dragon",
-        "date": "November 24, 2003",
-        "color": "#00FF00",
-        "custom_model_data": [3021, 3022, 3023],
-        "max_uses": 10,
-        "deck_set": True,
-        "weight": 8000
-    },
-    "ex4": {
-        "name": "EX Team Magma vs Team Aqua",
-        "date": "March 15, 2004",
-        "color": "#018787",
-        "custom_model_data": [3031, 3032, 3033],
-        "max_uses": 9,
-        "deck_set": True,
-        "weight": 7000
-    },
-    "ex5": {
-        "name": "EX Hidden Legends",
-        "date": "June 14, 2004",
-        "color": "#8B0000",
-        "custom_model_data": [3041, 3042, 3043],
-        "max_uses": 9,
-        "deck_set": True,
-        "weight": 5000
-    },
-    "ex6": {
-        "name": "EX FireRed & LeafGreen",
-        "date": "August 30, 2004",
-        "color": "#a1cc47",
-        "custom_model_data": [3051, 3052],
-        "max_uses": 8,
-        "deck_set": True,
-        "weight": 3500
-    },
-    "ex7": {
-        "name": "EX Team Rocket Returns",
-        "date": "November 8, 2004",
-        "color": "#ba3504",
-        "custom_model_data": [3061, 3062, 3063],
-        "max_uses": 8,
-        "deck_set": True,
-        "weight": 1000
-    },
-    "ex8": {
-        "name": "EX Deoxys",
-        "date": "February 14, 2005",
-        "color": "#bd33ff",
-        "custom_model_data": [3071, 3072],
-        "max_uses": 7,
-        "deck_set": True,
-        "weight": 700
-    },
-    "ex9": {
-        "name": "EX Emerald",
-        "date": "May 9, 2005",
-        "color": "#50c878",
-        "custom_model_data": [3081, 3082],
-        "max_uses": 6,
-        "deck_set": True,
-        "weight": 500
-    },
-    "ex10": {
-        "name": "EX Unseen Forces",
-        "date": "August 22, 2005",
-        "color": "#02c2c2",
-        "custom_model_data": [3091, 3092],
-        "max_uses": 5,
-        "deck_set": True,
-        "weight": 350
-    },
-    "ex11": {
-        "name": "EX Delta Species",
-        "date": "October 31, 2005",
-        "color": "#C0C0C0",
-        "custom_model_data": [3101, 3102],
-        "max_uses": 3,
-        "deck_set": True,
-        "weight": 200
-    },
-    "ex12": {
-        "name": "EX Legend Maker",
-        "date": "February 13, 2006",
-        "color": "#d2b48c",
-        "custom_model_data": [3111, 3112],
-        "max_uses": 2,
-        "deck_set": True,
-        "weight": 150
-    },
-    "ex13": {
-        "name": "EX Holon Phantoms",
-        "date": "May 3, 2006",
-        "color": "#9966CC",
-        "custom_model_data": [3121, 3122],
-        "max_uses": 1,
-        "deck_set": True,
-        "weight": 100
-    },
-    "ex14": {
-        "name": "EX Crystal Guardians",
-        "date": "August 30, 2006",
-        "color": "#b0e0e6",
-        "custom_model_data": [3131, 3132],
-        "max_uses": 1,
-        "deck_set": True,
-        "weight": 70
-    },
-    "ex15": {
-        "name": "EX Dragon Frontiers",
-        "date": "November 8, 2006",
-        "color": "#fcb738",
-        "custom_model_data": [3141, 3142],
-        "max_uses": 1,
-        "deck_set": True,
-        "weight": 50
-    },
-    "ex16": {
-        "name": "EX Power Keepers",
-        "date": "February 14, 2007",
-        "color": "#820000",
-        "custom_model_data": [3151, 3152],
-        "max_uses": 1,
-        "deck_set": True,
-        "weight": 30
-    }
-}
+with open('data.json', 'r', encoding="utf-8") as file:
+    data = json.load(file)
+    sets = data['sets']
 
 sets = {key: {**value, "abbreviation": key} for key, value in sets.items()}
 
@@ -203,7 +60,7 @@ def populate_villager_data() -> None:
         pokemon_data[energy_type] = {'Common': [], 'Uncommon': [], 'Rare': []}
     for set in sets:
         for rarity in ['Common', 'Uncommon', 'Rare']:
-            with open(f'C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}/{rarity}.json', 'r') as file:
+            with open(f'loot_tables/{set}/{rarity}.json', 'r') as file:
                 loot_table = json.load(file)
             for entry in loot_table['pools'][0]['entries']:
                 functions = entry['functions']
@@ -245,7 +102,7 @@ def populate_energy_cards() -> None:
         'rare': [10, 11]
     }
     for rarity in entry_numbers:
-        with open(f'C:/Users/Andreas/Desktop/pip_code/loot_tables/ex1/{rarity}.json', 'r') as file:
+        with open(f'loot_tables/ex1/{rarity}.json', 'r') as file:
             loot_table = json.load(file)
         for entry_num in entry_numbers[rarity]:
             entry = loot_table['pools'][0]['entries'][entry_num]
@@ -259,7 +116,7 @@ def populate_energy_cards() -> None:
             energy_data.update({energy_type: card_data})
 
 
-def sort_card_weights() -> List[int]:
+def sort_card_weights() -> dict:
     rarities = ['Common', 'Uncommon', 'Rare']
     card_weights = {pokemon_type: {rarity: [] for rarity in rarities} for pokemon_type in pokemon_data}
     for pokemon_type in deck_color:
@@ -270,7 +127,7 @@ def sort_card_weights() -> List[int]:
     return card_weights
 
 
-def sort_trainer_weights() -> List[int]:
+def sort_trainer_weights() -> dict:
     card_weights = {subtype: [] for subtype in trainer_data}
     for subtype in card_weights:
         card_weights[subtype] = [trainer.weight for trainer in trainer_data[subtype]]
@@ -327,8 +184,9 @@ def add_pokemon_cards(evolution_names:List[str], pokemon_type:str, deck_dict:str
 
         min = card_amount[rarity]['Stack Min']
         max = card_amount[rarity]['Stack Max']
-        components = fix_json(card.components)
-     
+
+        components = card.components
+
         deck_dict = add_to_deck(deck_dict, min=min, max=max, components=components, item_type='card_dict')
         evolution_names.append(card.name)
         card_list.append(card)
@@ -348,7 +206,7 @@ def unescape_string(escaped_string: str) -> str:
     return unescaped_string
 
 
-def add_to_deck(deck_dict:dict, min:int, max:int, components:dict, item_type:str) -> dict:
+def add_to_deck(deck_dict: dict, min: int, max: int, components: dict, item_type: str) -> dict:
     stack_amount = random.randrange(min, max + 1)
     card_dict = data_strings[item_type] % (stack_amount, components)
     deck_dict["sell"]["components"]["bundle_contents"].append(card_dict)
@@ -356,7 +214,7 @@ def add_to_deck(deck_dict:dict, min:int, max:int, components:dict, item_type:str
     return deck_dict
 
 
-def get_trainer_cards(deck_dict:dict) -> dict:
+def get_trainer_cards(deck_dict: dict) -> dict:
     weights = trainer_weights.copy()
     subtype_weights = {
         'supporter': 35,
@@ -378,7 +236,6 @@ def get_trainer_cards(deck_dict:dict) -> dict:
         card_index = trainer_data[subtype].index(random_card)
         weights[card_index] = 0
         components = random_card.components
-        components = fix_json(components)
         deck_dict = add_to_deck(deck_dict, min=2, max=4, components=components, item_type="card_dict")
 
     return deck_dict
@@ -386,7 +243,8 @@ def get_trainer_cards(deck_dict:dict) -> dict:
 
 def energy_cards(deck_type, deck_dict) -> dict:
     energies = []
-    def random_energy(energies:List[str]) -> str:
+
+    def random_energy(energies: List[str]) -> str:
         if not energies:
             energies = [energy for energy in energy_data if energy not in ['Darkness', 'Metal', deck_type]]
         energy = energies.pop(random.randint(0, len(energies) - 1))
@@ -457,13 +315,12 @@ def energy_cards(deck_type, deck_dict) -> dict:
             stack_max = stack_dict[i]['max']
 
         components = energy.components
-        components = fix_json(components)
         deck_dict = add_to_deck(deck_dict, stack_min, stack_max, components, "card_dict")
 
     return deck_dict
 
 
-def deck(deck_amount:int) -> dict:
+def deck(deck_amount: int) -> dict:
     decks = {}
     for i in range(1, deck_amount + 1):
         decks[f"Deck{i}"] = None
@@ -548,28 +405,6 @@ def booster(total_boosters:int) -> List[str]:
     return trades
 
 
-def fix_json(components):
-    components = json.dumps(components)
-    components = re.sub(r'\["\'{', r"'[{", components)
-    components = re.sub(r"}'\"]", r"}]'", components)
-
-    components = re.sub(r'\["\'\[{', r"['[{", components)
-    components = re.sub(r'}]\'"]', r"}]']", components)
-
-    components = re.sub(r"'text': '((?:[^'\\]|\\.)*)'", r'"text":"\1"', components)
-    components = re.sub(r"'color': '((?:[^'\\]|\\.)*)'", r'"color":"\1"', components)
-    components = re.sub(r"'bold': ((?:[^'\\]|\\.)*)", r'"bold":\1', components)
-    components = re.sub(r"'italic': ((?:[^'\\]|\\.)*)", r'"italic":\1', components)
-    components = re.sub(r"'underlined': ((?:[^'\\]|\\.)*)", r'"underlined":\1', components)
-    components = re.sub(r"'text': \\\"(.*?)\\\"", r'"text":"\1"', components)
-    components = re.sub(r"(\"text\":\s*\"(.*?)\")", lambda m: m.group(1).replace("'", "\\'"), components)
-    components = re.sub(r'"custom_data":\s*{([^}]+)}', 
-                    lambda m: re.sub(r'(\s*"[^"]+"\s*:\s*)1', r'\g<1>1b', m.group(0)), 
-                    components)
-
-    return components
-
-
 def fix_dict(deck_dict):
     # Convert deckDict to JSON string
     deckDictString = json.dumps(deck_dict)
@@ -615,7 +450,7 @@ def fix_dict(deck_dict):
 
 def construct_deck_files(total_files, total_decks) -> None:
     total_files += 1
-    paths = ["C:/Users/Andreas/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data/gen3_decks/function/decks1"]
+    paths = ["decks/function/decks1"]
     for i in range(1, total_decks + 1):
         base_path = paths[0][:-1]
         new_path = base_path + f"{+ i}"
@@ -649,7 +484,7 @@ def construct_deck_files(total_files, total_decks) -> None:
 
 def construct_booster_files(total_files, booster_amount) -> None:
     total_files += 1
-    directory = "C:/Users/Andreas/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data/gen3_boosters/function/"
+    directory = "boosters/function/"
     if os.path.exists(directory):
         shutil.rmtree(directory)
     os.makedirs(directory)
@@ -681,9 +516,10 @@ def replace_villager_trades(num_files:int, profession:str) -> None:
         'execute': f'execute as @p[x=-52711,y=113,z=108732,limit=1,sort=nearest] run data modify entity @e[type=villager,limit=1,sort=nearest,nbt={{VillagerData:{{profession:"minecraft:{profession}"}}}}] Offers.Recipes set value []'
     }
     function_path = f"gen3_{profession_dict[profession]}:"
-    path = f"C:/Users/Andreas/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data/expansions/function/replace_villager_{profession_dict[profession]}_gen3.mcfunction"
+    path = f"expansions/function/"
     if not os.path.exists(path):
         os.makedirs(path)
+    path = path + f'replace_villager_{profession_dict[profession]}_gen3.mcfunction'
     with open(path, 'w') as file:
         for function in function_dict.values():
             file.write(function + '\n')
@@ -696,7 +532,7 @@ def replace_villager_trades(num_files:int, profession:str) -> None:
 
 
 if __name__ == "__main__":
-    directory = 'C:/Users/Andreas/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data/gen3_decks'
+    directory = 'decks'
     if os.path.exists(directory):
         shutil.rmtree(directory)
     

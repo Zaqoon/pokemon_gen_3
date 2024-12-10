@@ -1,4 +1,5 @@
 import re
+import json
 
 patterns = {
     "evolution_search_patterns": [
@@ -61,7 +62,29 @@ def unescape_string(escaped_string: str) -> str:
     return unescaped_string
 
 
-class VillagerData():
+def fix_json(components):
+    components = json.dumps(components)
+    components = re.sub(r'\["\'{', r"'[{", components)
+    components = re.sub(r"}'\"]", r"}]'", components)
+
+    components = re.sub(r'\["\'\[{', r"['[{", components)
+    components = re.sub(r'}]\'"]', r"}]']", components)
+
+    components = re.sub(r"'text': '((?:[^'\\]|\\.)*)'", r'"text":"\1"', components)
+    components = re.sub(r"'color': '((?:[^'\\]|\\.)*)'", r'"color":"\1"', components)
+    components = re.sub(r"'bold': ((?:[^'\\]|\\.)*)", r'"bold":\1', components)
+    components = re.sub(r"'italic': ((?:[^'\\]|\\.)*)", r'"italic":\1', components)
+    components = re.sub(r"'underlined': ((?:[^'\\]|\\.)*)", r'"underlined":\1', components)
+    components = re.sub(r"'text': \\\"(.*?)\\\"", r'"text":"\1"', components)
+    components = re.sub(r"(\"text\":\s*\"(.*?)\")", lambda m: m.group(1).replace("'", "\\'"), components)
+    components = re.sub(r'"custom_data":\s*{([^}]+)}',
+                    lambda m: re.sub(r'(\s*"[^"]+"\s*:\s*)1', r'\g<1>1b', m.group(0)),
+                    components)
+
+    return components
+
+
+class VillagerData:
     def __init__(self, data) -> None:
         self.weight = data['weight']
         self.functions = data['functions']
@@ -83,9 +106,10 @@ class VillagerData():
             'custom_name': self.custom_name,
             'lore': self.lore
         }
+        self.components = fix_json(self.components)
 
 
-class TrainerData():
+class TrainerData:
     def __init__(self, data) -> None:
         self.weight = data['weight']
         self.functions = data['functions']
@@ -105,10 +129,11 @@ class TrainerData():
             'custom_name': self.custom_name,
             'lore': self.lore
         }
+        self.components = fix_json(self.components)
         self.weight = trainer_weights(self)
 
 
-class EnergyData():
+class EnergyData:
     def __init__(self, data) -> None:
         self.functions = data['functions']
         self.rarity = data['rarity']
@@ -125,3 +150,4 @@ class EnergyData():
             'custom_name': self.custom_name,
             'lore': self.lore
         }
+        self.components = fix_json(self.components)
