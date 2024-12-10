@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Pokemon folders
+functions/
+loot_tables/
+
 # Distribution / packaging
 .Python
 build/
