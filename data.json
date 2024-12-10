@@ -1,4 +1,150 @@
 {
+    "sets": {
+        "ex1": {
+            "name": "EX Ruby & Sapphire",
+            "date": "July 18, 2003",
+            "color": "red",
+            "custom_model_data": [3001, 3002, 3003],
+            "max_uses": 10,
+            "deck_set": true,
+            "weight": 10000
+        },
+        "ex2": {
+            "name": "EX Sandstorm",
+            "date": "September 18, 2003",
+            "color": "#D2B48C",
+            "custom_model_data": [3011, 3012, 3013],
+            "max_uses": 10,
+            "deck_set": true,
+            "weight": 9000
+        },
+        "ex3": {
+            "name": "EX Dragon",
+            "date": "November 24, 2003",
+            "color": "#00FF00",
+            "custom_model_data": [3021, 3022, 3023],
+            "max_uses": 10,
+            "deck_set": true,
+            "weight": 8000
+        },
+        "ex4": {
+            "name": "EX Team Magma vs Team Aqua",
+            "date": "March 15, 2004",
+            "color": "#018787",
+            "custom_model_data": [3031, 3032, 3033],
+            "max_uses": 9,
+            "deck_set": true,
+            "weight": 7000
+        },
+        "ex5": {
+            "name": "EX Hidden Legends",
+            "date": "June 14, 2004",
+            "color": "#8B0000",
+            "custom_model_data": [3041, 3042, 3043],
+            "max_uses": 9,
+            "deck_set": true,
+            "weight": 5000
+        },
+        "ex6": {
+            "name": "EX FireRed & LeafGreen",
+            "date": "August 30, 2004",
+            "color": "#a1cc47",
+            "custom_model_data": [3051, 3052],
+            "max_uses": 8,
+            "deck_set": true,
+            "weight": 3500
+        },
+        "ex7": {
+            "name": "EX Team Rocket Returns",
+            "date": "November 8, 2004",
+            "color": "#ba3504",
+            "custom_model_data": [3061, 3062, 3063],
+            "max_uses": 8,
+            "deck_set": true,
+            "weight": 1000
+        },
+        "ex8": {
+            "name": "EX Deoxys",
+            "date": "February 14, 2005",
+            "color": "#bd33ff",
+            "custom_model_data": [3071, 3072],
+            "max_uses": 7,
+            "deck_set": true,
+            "weight": 700
+        },
+        "ex9": {
+            "name": "EX Emerald",
+            "date": "May 9, 2005",
+            "color": "#50c878",
+            "custom_model_data": [3081, 3082],
+            "max_uses": 6,
+            "deck_set": true,
+            "weight": 500
+        },
+        "ex10": {
+            "name": "EX Unseen Forces",
+            "date": "August 22, 2005",
+            "color": "#02c2c2",
+            "custom_model_data": [3091, 3092],
+            "max_uses": 5,
+            "deck_set": true,
+            "weight": 350
+        },
+        "ex11": {
+            "name": "EX Delta Species",
+            "date": "October 31, 2005",
+            "color": "#C0C0C0",
+            "custom_model_data": [3101, 3102],
+            "max_uses": 3,
+            "deck_set": true,
+            "weight": 200
+        },
+        "ex12": {
+            "name": "EX Legend Maker",
+            "date": "February 13, 2006",
+            "color": "#d2b48c",
+            "custom_model_data": [3111, 3112],
+            "max_uses": 2,
+            "deck_set": true,
+            "weight": 150
+        },
+        "ex13": {
+            "name": "EX Holon Phantoms",
+            "date": "May 3, 2006",
+            "color": "#9966CC",
+            "custom_model_data": [3121, 3122],
+            "max_uses": 1,
+            "deck_set": true,
+            "weight": 100
+        },
+        "ex14": {
+            "name": "EX Crystal Guardians",
+            "date": "August 30, 2006",
+            "color": "#b0e0e6",
+            "custom_model_data": [3131, 3132],
+            "max_uses": 1,
+            "deck_set": true,
+            "weight": 70
+        },
+        "ex15": {
+            "name": "EX Dragon Frontiers",
+            "date": "November 8, 2006",
+            "color": "#fcb738",
+            "custom_model_data": [3141, 3142],
+            "max_uses": 1,
+            "deck_set": true,
+            "weight": 50
+        },
+        "ex16": {
+            "name": "EX Power Keepers",
+            "date": "February 14, 2007",
+            "color": "#820000",
+            "custom_model_data": [3151, 3152],
+            "max_uses": 1,
+            "deck_set": true,
+            "weight": 30
+        }
+    },
     "energy_type_dict": {
         "Grass": {
             "main_color": "#4CAF50",
