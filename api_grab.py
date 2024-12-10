@@ -259,9 +259,7 @@ def add_entry(pokeTag, weight_dict):
 
 
 def add_loot_table(set, rarity, weight):
-    newEntry = {'type': 'loot_table', 'weight': 1, 'value': 'tcg:set_name/rarity'}
-    newEntry['value'] = f'tcg:{set}/{rarity}'
-    newEntry['weight'] = round(weight)
+    newEntry = {'type': 'loot_table', 'weight': round(weight), 'value': f'tcg:{set}/{rarity}'}
     file_dict['pools'][0]['entries'].append(newEntry)
 
 
@@ -420,7 +418,7 @@ if __name__ == '__main__':
 
         for loot_table in tag_lines.keys():
             if len(loot_table) > 0:
-                file_dict = { 'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
+                file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
                 if len(loot_table) > 0:
                     with open(f'{directory}/{loot_table.lower()}.json', 'w') as file:
                         if loot_table != 'Reverse':
