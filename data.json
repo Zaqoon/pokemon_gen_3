@@ -1,0 +1,175 @@
+{
+    "energy_type_dict": {
+        "Grass": {
+            "main_color": "#4CAF50",
+            "sub_color": "#6ABF84",
+            "weak_resist_color": "green",
+            "card_nr": 30003
+        },
+        "Fire": {
+            "main_color": "#E53935",
+            "sub_color": "#FF4D4D",
+            "weak_resist_color": "red",
+            "card_nr": 30002
+        },
+        "Water": {
+            "main_color": "#2979FF",
+            "sub_color": "#4A90D9",
+            "weak_resist_color": "#0000FF",
+            "card_nr": 30006
+        },
+        "Fighting": {
+            "main_color": "#8D6E63",
+            "sub_color": "#BDAFA0",
+            "weak_resist_color": "#5C4033",
+            "card_nr": 30001
+        },
+        "Psychic": {
+            "main_color": "#BA68C8",
+            "sub_color": "#CFA3D9",
+            "weak_resist_color": "#BF40BF",
+            "card_nr": 30005
+        },
+        "Lightning": {
+            "main_color": "#FDD835",
+            "sub_color": "#FFF069",
+            "weak_resist_color": "yellow",
+            "card_nr": 30004
+        },
+        "Colorless": {
+            "main_color": "gray",
+            "sub_color": "#cccccc",
+            "weak_resist_color": "white",
+            "card_nr": false
+        },
+        "Darkness": {
+            "main_color": "#003f3f",
+            "sub_color": "#0b7070",
+            "weak_resist_color": "#003f3f",
+            "card_nr": 30007
+        },
+        "Metal": {
+            "main_color": "#C0C0C0",
+            "sub_color": "#828282",
+            "weak_resist_color": "dark_gray",
+            "card_nr": 30008
+        }
+    },
+    "rarity_dict": {
+        "Common": {
+            "color": "#4CAF50",
+            "symbol": " \u25cf",
+            "name_color": "white"
+        },
+        "Uncommon": {
+            "color": "#2196F3",
+            "symbol": " \u2666",
+            "name_color": "white"
+        },
+        "Rare": {
+            "color": "#fcd732",
+            "symbol": " \u2606",
+            "name_color": "yellow"
+        },
+        "Rare Holo": {
+            "color": "#FFC107",
+            "symbol": " \u2605",
+            "name_color": "aqua"
+        },
+        "Rare Holo EX": {
+            "color": "#C0C0C0",
+            "symbol": " \u2605",
+            "name_color": "light_purple"
+        },
+        "Rare Holo Star": {
+            "color": "#D4AF37",
+            "symbol": " \u2042",
+            "name_color": "light_purple"
+        },
+        "Rare Secret": {
+            "color": "#9966CC",
+            "symbol": " \u2605",
+            "name_color": "light_purple"
+        },
+        "Rare Shining": {
+            "color": "red",
+            "symbol": " \u2042",
+            "name_color": "light_purple"
+        },
+        "Promo": {
+            "color": "black",
+            "symbol": " \u272c",
+            "name_color": "aqua"
+        }
+    },
+    "set_data_dict": {
+        "ex1": {
+            "name": "Ruby & Sapphire",
+            "color": "red"
+        },
+        "ex2": {
+            "name": "Sandstorm",
+            "color": "#D2B48C"
+        },
+        "ex3": {
+            "name": "Dragon",
+            "color": "#00FF00"
+        },
+        "ex4": {
+            "name": "Magma vs Aqua",
+            "color": "#018787"
+        },
+        "ex5": {
+            "name": "Hidden Legends",
+            "color": "#8B0000"
+        },
+        "ex6": {
+            "name": "FireRed & LeafGreen",
+            "color": "#a1cc47"
+        },
+        "ex7": {
+            "name": "Rocket Returns",
+            "color": "#ba3504"
+        },
+        "ex8": {
+            "name": "Deoxys",
+            "color": "#bd33ff"
+        },
+        "ex9": {
+            "name": "Emerald",
+            "color": "#50c878"
+        },
+        "ex10": {
+            "name": "Unseen Forces",
+            "color": "#02c2c2"
+        },
+        "ex11": {
+            "name": "Delta Species",
+            "color": "#C0C0C0"
+        },
+        "ex12": {
+            "name": "Legend Maker",
+            "color": "#d2b48c"
+        },
+        "ex13": {
+            "name": "Holon Phantoms",
+            "color": "#9966CC"
+        },
+        "ex14": {
+            "name": "Crystal Guardians",
+            "color": "#b0e0e6"
+        },
+        "ex15": {
+            "name": "Dragon Frontiers",
+            "color": "#fcb738"
+        },
+        "ex16": {
+            "name": "Power Keepers",
+            "color": "#820000"
+        },
+        "np": {
+            "name": "Nintendo Promos",
+            "color": "#74a7f7"
+        }
+    }
+}
