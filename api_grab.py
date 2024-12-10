@@ -14,19 +14,19 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 RestClient.configure(API_KEY)
 
-target_set_list = ["ex1", "ex2", "ex3", "ex4", "np", "ex5", "ex6", "ex7", "ex8",
-                   "ex9", "ex10", "ex11", "ex12", "ex13", "ex14", "ex15", "ex16"]
+target_set_list = ['ex1', 'ex2', 'ex3', 'ex4', 'np', 'ex5', 'ex6', 'ex7', 'ex8',
+                   'ex9', 'ex10', 'ex11', 'ex12', 'ex13', 'ex14', 'ex15', 'ex16']
 
-#target_set_list = ["ex1"]
+#target_set_list = ['ex1']
 
 card_data = {gen: [] for gen in target_set_list}
 
 
 set_name = {
-    "ex1": "Ruby & Sapphire", "ex2": "Sandstorm", "ex3": "Dragon", "ex4": "Team Magma vs Team Aqua", "ex5": "Hidden Legends",
-    "ex6": "FireRed & LeafGreen", "ex7": "Team Rocket Returns", "ex8": "Deoxys", "ex9": "Emerald", "ex10": "Unseen Forces",
-    "ex11": "Delta Species", "ex12": "Legend Maker", "ex13": "Holon Phantoms", "ex14": "Crystal Guardians", "ex15": "Dragon Frontiers",
-    "ex16": "Power Keepers", "np": "Nintendo Promos"
+    'ex1': 'Ruby & Sapphire', 'ex2': 'Sandstorm', 'ex3': 'Dragon', 'ex4': 'Team Magma vs Team Aqua', 'ex5': 'Hidden Legends',
+    'ex6': 'FireRed & LeafGreen', 'ex7': 'Team Rocket Returns', 'ex8': 'Deoxys', 'ex9': 'Emerald', 'ex10': 'Unseen Forces',
+    'ex11': 'Delta Species', 'ex12': 'Legend Maker', 'ex13': 'Holon Phantoms', 'ex14': 'Crystal Guardians', 'ex15': 'Dragon Frontiers',
+    'ex16': 'Power Keepers', 'np': 'Nintendo Promos'
 }
 
 weight_dict_odds = {
@@ -232,7 +232,7 @@ def sortItem(card):
 
 def populateCard_Data(target):
     for set in target:
-        print(f"Populating cards from \"{set}\"")
+        print(f'Populating cards from \'{set}\'')
         cards = Card.where(q=f'set.id:{set}')
         sorted_cards = sorted(cards, key=sortItem)
         for card in sorted_cards:
@@ -242,78 +242,78 @@ def populateCard_Data(target):
 
 
 def add_entry(pokeTag, weight_dict):
-    newEntry = {"type": "item", "weight": 1, "name": "minecraft:filled_map", "functions": pokeTag[0]}
-    if loot_table == "Premium_rare":
+    newEntry = {'type': 'item', 'weight': 1, 'name': 'minecraft:filled_map', 'functions': pokeTag[0]}
+    if loot_table == 'Premium_rare':
         weight = weight_dict[pokeTag[1]]
         try:
-            newEntry["weight"] = round(weight)
+            newEntry['weight'] = round(weight)
         except:
-            print(f"Error: {card.name} in {set} has weight: {weight}")
-    elif loot_table == "Reverse":
+            print(f'Error: {card.name} in {set} has weight: {weight}')
+    elif loot_table == 'Reverse':
         weight = reverse_weight[pokeTag[1]]
-        newEntry["weight"] = round(weight)
-    elif card.rarity == "Promo" or isinstance(weight_dict, int):
-        newEntry["weight"] = weight_dict
+        newEntry['weight'] = round(weight)
+    elif card.rarity == 'Promo' or isinstance(weight_dict, int):
+        newEntry['weight'] = weight_dict
         
-    file_dict["pools"][0]["entries"].append(newEntry)
+    file_dict['pools'][0]['entries'].append(newEntry)
 
 
 def add_loot_table(set, rarity, weight):
-    newEntry = {"type": "loot_table", "weight": 1, "value": "tcg:set_name/rarity"}
-    newEntry["value"] = f"tcg:{set}/{rarity}"
-    newEntry["weight"] = round(weight)
-    file_dict["pools"][0]["entries"].append(newEntry)
+    newEntry = {'type': 'loot_table', 'weight': 1, 'value': 'tcg:set_name/rarity'}
+    newEntry['value'] = f'tcg:{set}/{rarity}'
+    newEntry['weight'] = round(weight)
+    file_dict['pools'][0]['entries'].append(newEntry)
 
 
 def add_rare_card(set, loot_table, weight):
     card_dict = {
-          "type": "item",
-          "weight": round(weight),
-          "name": "minecraft:carrot_on_a_stick",
-          "functions": [
+          'type': 'item',
+          'weight': round(weight),
+          'name': 'minecraft:carrot_on_a_stick',
+          'functions': [
             {
-              "function": "set_components",
-              "components": {
-                "minecraft:custom_model_data": 1,
-                "minecraft:custom_data": {
-                f"{set}_{loot_table.lower()}_rare": 1
+              'function': 'set_components',
+              'components': {
+                'minecraft:custom_model_data': 1,
+                'minecraft:custom_data': {
+                f'{set}_{loot_table.lower()}_rare': 1
                 },
-                "minecraft:enchantment_glint_override": True
+                'minecraft:enchantment_glint_override': True
               }
             },
             {
-              "function": "set_name",
-              "name": [
+              'function': 'set_name',
+              'name': [
                 {
-                  "color": "aqua",
-                  "italic": False,
-                  "text": "Holographic Card"
+                  'color': 'aqua',
+                  'italic': False,
+                  'text': 'Holographic Card'
                 }
               ]
             },
             {
-              "function": "set_lore",
-              "lore": [
+              'function': 'set_lore',
+              'lore': [
                 {
-                  "italic": True,
-                  "text": "Right click to reveal card."
+                  'italic': True,
+                  'text': 'Right click to reveal card.'
                 },
                 {
-                  "color": set_color[set],
-                  "italic": False,
-                  "text": set_name[set]
+                  'color': set_color[set],
+                  'italic': False,
+                  'text': set_name[set]
                 }
               ],
-              "mode": "append"
+              'mode': 'append'
             }
           ]
         }
-    file_dict["pools"][0]["entries"].append(card_dict)
+    file_dict['pools'][0]['entries'].append(card_dict)
 
 
 def reverse_weights(set):
     rarity_dict = {
-        "Rare Holo": 0, "Rare": 0, "Uncommon": 0, "Common": 0,
+        'Rare Holo': 0, 'Rare': 0, 'Uncommon': 0, 'Common': 0,
     }
     weight_dict = rarity_dict.copy()
     for card in card_data[set]:
@@ -325,7 +325,7 @@ def reverse_weights(set):
 
     for rarity in rarity_dict:
         if rarity_dict[rarity] > 0:
-            if rarity != "Common":
+            if rarity != 'Common':
                 weight_dict[rarity] = (total_weight / total_cards) * rarity_dict[rarity]
             else:
                 weight_dict[rarity] = total_weight / total_cards
@@ -333,16 +333,16 @@ def reverse_weights(set):
     return weight_dict
 
 
-def deck_special_cards(type_specific_cards:dict):
+def deck_special_cards(type_specific_cards: dict):
     for loot_table in type_specific_cards:
-        print(f"Creating loot table for {loot_table} Holo Cards ...")
-        file_directory = f"C:/Users/Andreas/Desktop/pip_code/loot_tables/type_rares_gen3/"
+        print(f'Creating loot table for {loot_table} Holo Cards ...')
+        file_directory = f'loot_tables/type_rares_gen3'
         if os.path.exists(file_directory):
             shutil.rmtree(file_directory)
         os.makedirs(file_directory)
 
-        file_dict = { "type": "minecraft:chest", "pools": [{"rolls": 1, "entries": []}]}
-        with open(f"{file_directory}{loot_table.lower()}.json", "w") as file:
+        file_dict = { 'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
+        with open(f'{file_directory}/{loot_table.lower()}.json', 'w') as file:
             for card_tag in type_specific_cards[loot_table]:
                 weight = card_tag[1]
                 add_entry(card_tag, weight)
@@ -352,41 +352,43 @@ def deck_special_cards(type_specific_cards:dict):
 
 populateCard_Data(target_set_list)
 
-if __name__ == "__main__":
-    energy_list = ["Fighting Energy", "Fire Energy", "Grass Energy", "Lightning Energy", "Psychic Energy", "Water Energy"]
+if __name__ == '__main__':
+    energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy', 'Lightning Energy', 'Psychic Energy', 'Water Energy']
     type_specific_cards = {
-            "Grass": [],
-            "Fire": [],
-            "Water": [],
-            "Psychic": [],
-            "Fighting": [],
-            "Lightning": [],
-            "Colorless": [],
-            "Darkness": [],
-            "Metal": []
+            'Grass': [],
+            'Fire': [],
+            'Water': [],
+            'Psychic': [],
+            'Fighting': [],
+            'Lightning': [],
+            'Colorless': [],
+            'Darkness': [],
+            'Metal': []
         }
     for set in target_set_list:
-        print(f"Creating loot table for {set} ...")
-        if os.path.exists(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}"):
-            shutil.rmtree(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}")
-        if not os.path.exists(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}"):
-            os.makedirs(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}")
+        print(f'Creating loot table for {set} ...')
+
+        directory = f'loot_tables/{set}'
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+
+        os.makedirs(directory)
 
         tag_lines = {
-            "Common": [],
-            "Uncommon": [],
-            "Rare": [],
-            "Premium": [],
-            "Premium_rare": [],
-            "Reverse": [],
-            "Reverse_rare": [],
-            "Energy": []
+            'Common': [],
+            'Uncommon': [],
+            'Rare': [],
+            'Premium': [],
+            'Premium_rare': [],
+            'Reverse': [],
+            'Reverse_rare': [],
+            'Energy': []
         }
 
-        if set == "np":
+        if set == 'np':
             weight = len(card_data[set]) + 90
-            file_dict = { "type": "minecraft:chest", "pools": [{"rolls": 1, "entries": []}]}
-            with open(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}/promos.json", "w") as file:
+            file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
+            with open(f'{directory}/promos.json', 'w') as file:
                 for card in card_data[set]:
                     card_object = [card.functions, card.rarity]
                     add_entry(card_object, weight)
@@ -400,62 +402,60 @@ if __name__ == "__main__":
 
         for card in card_data[set]:
             card_object = [card.functions, card.rarity]
-            if card.rarity in ["Common", "Uncommon", "Rare", "Promo"]:
+            if card.rarity in ['Common', 'Uncommon', 'Rare', 'Promo']:
                 tag_lines[card.rarity].append(card_object)
-            if card.rarity in ["Rare Holo", "Rare Holo EX", "Rare Holo Star", "Rare Secret"]:
-                tag_lines["Premium_rare"].append(card_object)
-            if card.rarity in ["Common"] and card.name not in energy_list:
-                tag_lines["Reverse"].append(card_object)
-            if card.rarity in ["Rare Holo"] and card.name not in energy_list:
-                tag_lines["Reverse_rare"].append(card_object)
+            if card.rarity in ['Rare Holo', 'Rare Holo EX', 'Rare Holo Star', 'Rare Secret']:
+                tag_lines['Premium_rare'].append(card_object)
+            if card.rarity in ['Common'] and card.name not in energy_list:
+                tag_lines['Reverse'].append(card_object)
+            if card.rarity in ['Rare Holo'] and card.name not in energy_list:
+                tag_lines['Reverse_rare'].append(card_object)
             if card.name in energy_list:
-                tag_lines["Energy"].append(card_object)
+                tag_lines['Energy'].append(card_object)
             
-            if card.rarity == "Rare Holo" and card.supertype == "Pokémon":
-                card_object = [card.functions, sets[set]["weight"]]
+            if card.rarity == 'Rare Holo' and card.supertype == 'Pokémon':
+                card_object = [card.functions, sets[set]['weight']]
                 for card_type in card.types:
                     type_specific_cards[card_type].append(card_object)
 
         for loot_table in tag_lines.keys():
             if len(loot_table) > 0:
-                file_dict = { "type": "minecraft:chest", "pools": [{"rolls": 1, "entries": []}]}
+                file_dict = { 'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
                 if len(loot_table) > 0:
-                    with open(f"C:/Users/Andreas/Desktop/pip_code/loot_tables/{set}/{loot_table.lower()}.json", "w") as file:
-                        if loot_table != "Reverse":
+                    with open(f'{directory}/{loot_table.lower()}.json', 'w') as file:
+                        if loot_table != 'Reverse':
                             for card_tag in tag_lines[loot_table]:
                                 add_entry(card_tag, weight_dict)
                         else:
-                            for card_tag in tag_lines["Common"]:
-                                if card_tag not in tag_lines["Energy"]:
+                            for card_tag in tag_lines['Common']:
+                                if card_tag not in tag_lines['Energy']:
                                     add_entry(card_tag, weight_dict)
-                        if loot_table == "Premium":
-                            if weight_dict["Common"] > 0:
-                                add_loot_table(set, "common", weight_dict["Common"])
-                            if weight_dict["basic_energy"] > 0:
-                                add_loot_table(set, "energy", weight_dict["basic_energy"])
-                            if weight_dict["Rare"] > 0:
-                                add_loot_table(set, "rare", weight_dict["Rare"])
-                            add_rare_card(set, loot_table, weight_dict["Premium"])
-                        if loot_table == "Reverse":
-                            add_loot_table(set, "uncommon", reverse_weight["Uncommon"])
-                            add_loot_table(set, "rare", reverse_weight["Rare"])
-                            add_rare_card(set, loot_table, reverse_weight["Rare Holo"])  
+                        if loot_table == 'Premium':
+                            if weight_dict['Common'] > 0:
+                                add_loot_table(set, 'common', weight_dict['Common'])
+                            if weight_dict['basic_energy'] > 0:
+                                add_loot_table(set, 'energy', weight_dict['basic_energy'])
+                            if weight_dict['Rare'] > 0:
+                                add_loot_table(set, 'rare', weight_dict['Rare'])
+                            add_rare_card(set, loot_table, weight_dict['Premium'])
+                        if loot_table == 'Reverse':
+                            add_loot_table(set, 'uncommon', reverse_weight['Uncommon'])
+                            add_loot_table(set, 'rare', reverse_weight['Rare'])
+                            add_rare_card(set, loot_table, reverse_weight['Rare Holo'])
                         file_dict = json.dumps(file_dict, indent=4)
                         file.write(file_dict)
 
     # Rares for types in decks
-    file_directory = f"C:/Users/Andreas/Desktop/pip_code/loot_tables/type_rares_gen3/"
+    file_directory = 'loot_tables/type_rares_gen3'
     if os.path.exists(file_directory):
         shutil.rmtree(file_directory)
     os.makedirs(file_directory)
     for loot_table in type_specific_cards.keys():
-        print(f"Creating loot table for {loot_table} Holo Cards ...")
-        file_dict = { "type": "minecraft:chest", "pools": [{"rolls": 1, "entries": []}]}
-        with open(f"{file_directory}{loot_table.lower()}.json", "w") as file:
+        print(f'Creating loot table for {loot_table} Holo Cards ...')
+        file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
+        with open(f'{file_directory}/{loot_table.lower()}.json', 'w') as file:
             for card_tag in type_specific_cards[loot_table]:
                 weight = card_tag[1]
                 add_entry(card_tag, weight)
             file_dict = json.dumps(file_dict, indent=4)
             file.write(file_dict)
-        
-
