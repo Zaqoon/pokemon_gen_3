@@ -505,7 +505,7 @@ def construct_booster_files(total_files, booster_amount) -> None:
     replace_villager_trades(total_files, profession='cartographer')
 
 
-def replace_villager_trades(num_files:int, profession:str) -> None:
+def replace_villager_trades(num_files: int, profession: str) -> None:
     profession_dict = {
         'librarian': 'decks',
         'cartographer': 'boosters'
@@ -544,5 +544,5 @@ if __name__ == "__main__":
     card_weights = sort_card_weights()
     trainer_weights = sort_trainer_weights()
 
-    construct_deck_files(200, 5)
+    construct_deck_files(300, 5)
     construct_booster_files(200, 5)
