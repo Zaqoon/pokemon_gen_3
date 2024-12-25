@@ -687,7 +687,8 @@ class Card_Data:
             'large': card.images.large,
             'small': card.images.small
         }
-        self.price = price_dict[self.static_poke_num_cntr]
+        if str(self.static_poke_num_cntr) in price_dict:
+            self.price = price_dict[str(self.static_poke_num_cntr)]
 
         custom_data = [self.supertype]
         if self.supertype != "Energy":
