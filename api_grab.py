@@ -216,7 +216,7 @@ set_color = {
 }
 
 
-def sortItem(card):
+def sort_item(card):
     match = re.match(r'^([A-Za-z]*)(\d+)(.*)', card.number)
     if match:
         prefix = match.group(1)  # Capture any letters or characters before the numeric part
@@ -230,11 +230,11 @@ def sortItem(card):
         return (0, '', 0, '')  # Default value if no match is found
 
 
-def populateCard_Data(target):
+def populate_data(target):
     for set in target:
         print(f'Populating cards from \'{set}\'')
         cards = Card.where(q=f'set.id:{set}')
-        sorted_cards = sorted(cards, key=sortItem)
+        sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
             currCard_Data = Card_Data(card)
             currCard_Data.generate_components()
@@ -348,9 +348,9 @@ def deck_special_cards(type_specific_cards: dict):
             file.write(file_dict)
 
 
-populateCard_Data(target_set_list)
-
 if __name__ == '__main__':
+    populate_data(target_set_list)
+
     energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy', 'Lightning Energy', 'Psychic Energy', 'Water Energy']
     type_specific_cards = {
             'Grass': [],
