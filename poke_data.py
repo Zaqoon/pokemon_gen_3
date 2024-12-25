@@ -640,7 +640,7 @@ class SetEncoder(json.JSONEncoder):
         return super(SetEncoder, self).default(obj)
 
 
-class Card_Data():
+class Card_Data:
     name: str
     supertype: str
     number: str
@@ -662,7 +662,7 @@ class Card_Data():
     static_poke_num_cntr = 0
     promo_poke_num_cntr = 0
 
-    def __init__(self, card: Card) -> None:
+    def __init__(self, card: Card, price_dict: dict) -> None:
         if card.rarity is not None and card.name.replace(" Energy", "") not in energy_type_dict:
             if card.rarity == "Promo":
                 Card_Data.promo_poke_num_cntr += 1
@@ -687,6 +687,7 @@ class Card_Data():
             'large': card.images.large,
             'small': card.images.small
         }
+        self.price = price_dict[self.static_poke_num_cntr]
 
         custom_data = [self.supertype]
         if self.supertype != "Energy":

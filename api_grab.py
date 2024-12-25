@@ -21,6 +21,8 @@ target_set_list = ['ex1', 'ex2', 'ex3', 'ex4', 'np', 'ex5', 'ex6', 'ex7', 'ex8',
 
 card_data = {gen: [] for gen in target_set_list}
 
+with open('prices.json', 'r') as file:
+    price_dict = json.load(file)
 
 set_name = {
     'ex1': 'Ruby & Sapphire', 'ex2': 'Sandstorm', 'ex3': 'Dragon', 'ex4': 'Team Magma vs Team Aqua', 'ex5': 'Hidden Legends',
@@ -236,7 +238,7 @@ def populate_data(target):
         cards = Card.where(q=f'set.id:{set}')
         sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
-            currCard_Data = Card_Data(card)
+            currCard_Data = Card_Data(card, price_dict)
             currCard_Data.generate_components()
             card_data[set].append(currCard_Data)
 
