@@ -257,57 +257,72 @@ def flavor_text_lines(flavor_text:str, lore_lines:list) -> list:
     return lore_lines
 
 
-def weakness_and_resistance(weaknesses:list, resistances:list, energy_color:str, lore_lines:list) -> list:
+def weakness_and_resistance(weaknesses: list, resistances: list,
+                            energy_color: str, lore_lines: list, price: float) -> list:
     tag_line_list = []
     weakness_string = ""
     resistance_string = ""
+    price_string = f'${price}'
+
     if weaknesses is not None:
         if len(weaknesses) > 1:
-            weakness_string = " Weaknesses:"
+            weakness_string = " Weaknesses: "
         else:
-            weakness_string = " Weakness:"
-        tag_line = tag_line_generator(text=weakness_string, color=energy_color, underlined=False, bold=False, italic=False)
+            weakness_string = " Weakness: "
+        tag_line = tag_line_generator(text=weakness_string, color=energy_color, underlined=False, bold=False,
+                                      italic=False)
         tag_line_list.append(tag_line)
 
         for weakness in weaknesses:
             color = energy_type_dict[weakness.type]["main_color"]
-            tag_line = tag_line_generator(text=" ●", color=color, underlined=False, bold=False, italic=False)
+            symbol = '●   ' if weakness == weaknesses[-1] else '●'
+            tag_line = tag_line_generator(text=symbol, color=color, underlined=False, bold=False, italic=False)
             tag_line_list.append(tag_line)
-    
+
     if resistances is not None:
         if len(resistances) > 1:
-            resistance_string = "Resistances:"
+            resistance_string = "Resistances: "
         else:
-            resistance_string = "Resistance:"
+            resistance_string = "Resistance: "
 
         if weaknesses is None:
             resistance_string = " " + resistance_string
 
-        resistance_str = resistance_string + " " + " ".join(["●" for _ in resistances])
-        spaces = weakness_resistance_spaces(weakness_string, resistance_str)
-        tag_line = tag_line_generator(text=spaces, color=energy_color, underlined=False, bold=False, italic=False)
-        tag_line_list.append(tag_line)
-
-        tag_line = tag_line_generator(text=resistance_string, color=energy_color, underlined=False, bold=False, italic=False)
+        tag_line = tag_line_generator(text=resistance_string, color=energy_color, underlined=False, bold=False,
+                                      italic=False)
         tag_line_list.append(tag_line)
 
         for resistance in resistances:
             color = energy_type_dict[resistance.type]["main_color"]
-            tag_line = tag_line_generator(text=" ●", color=color, underlined=False, bold=False, italic=False)
+            tag_line = tag_line_generator(text="● ", color=color, underlined=False, bold=False, italic=False)
             tag_line_list.append(tag_line)
-    
+
+    # Spaces
+    resistance_str = resistance_string + " ".join(["●" for _ in resistances]) if resistances else resistance_string
+    spaces = weakness_resistance_spaces(weakness_string, resistance_str, price_string)
+
+    tag_line = tag_line_generator(text=spaces, color=energy_color, underlined=False, bold=False, italic=False)
+    tag_line_list.append(tag_line)
+
+    # Price
+    tag_line = tag_line_generator(text=price_string, color='#4caf50', underlined=False, bold=False, italic=False)
+    tag_line_list.append(tag_line)
+
     lore_lines.append(tag_line_list)
 
     return lore_lines
 
 
-def weakness_resistance_spaces(weakness_string:str, resistance_string:str) -> str:
+def weakness_resistance_spaces(weakness_string: str, resistance_string: str, price_string: str) -> str:
     spaces = ""
-    string = weakness_string + resistance_string
+    string = weakness_string + resistance_string + price_string
     width = sum(letter_widths.get(char, 0) for char in string)
     while width + 4.2 <= 188:
         spaces += " "
         width += + 4.2
+
+    if len(weakness_string) > 1 and len(spaces) > 1:
+        spaces = spaces[:-3]
 
     return spaces
 
