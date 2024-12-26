@@ -19,11 +19,15 @@ def get_prices(target) -> dict:
     crd_nmbr = 0
     promo_nmbr = 0
     prices_dict = {}
+    energy_type_list = ['Grass', 'Water', 'Fire', 'Lightning', 'Fighting', 'Psychic', 'Colorless', 'Darkness', 'Metal']
     for set in target:
         print(f"Populating cards from \"{set}\"")
         cards = Card.where(q=f'set.id:{set}')
         sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
+            if card.rarity is None or card.name.replace(" Energy", "") in energy_type_list:
+                continue
+
             try:
                 price = card.cardmarket.prices.trendPrice
                 converted_price = euro_to_usd(price)

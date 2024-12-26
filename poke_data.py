@@ -19,7 +19,8 @@ with open('data.json', 'r', encoding="utf-8") as file:
 
 special_rules = {}
 
-basic_energy_list = ["Fighting Energy", "Fire Energy", "Grass Energy", "Lightning Energy", "Psychic Energy", "Water Energy"]
+basic_energy_list = ["Fighting Energy", "Fire Energy", "Grass Energy",
+                     "Lightning Energy", "Psychic Energy", "Water Energy"]
 
 letter_widths = {
         'a': 6,
@@ -100,12 +101,12 @@ letter_widths = {
         '-': 6,
         '_': 6,
         ' ': 4,
-        '[' : 4,
-        ']' : 4,
-        '♥' : 6,
-        '>' : 6,
-        '♂' : 6,
-        '♀' : 6,
+        '[': 4,
+        ']': 4,
+        '♥': 6,
+        '>': 6,
+        '♂': 6,
+        '♀': 6,
         '●': 5
         }
 
@@ -266,27 +267,25 @@ def weakness_and_resistance(weaknesses: list, resistances: list,
 
     if weaknesses is not None:
         if len(weaknesses) > 1:
-            weakness_string = " Weaknesses: "
+            weakness_string = "  Weaknesses: "
         else:
-            weakness_string = " Weakness: "
+            weakness_string = "  Weakness: "
         tag_line = tag_line_generator(text=weakness_string, color=energy_color, underlined=False, bold=False,
                                       italic=False)
         tag_line_list.append(tag_line)
 
         for weakness in weaknesses:
             color = energy_type_dict[weakness.type]["main_color"]
-            symbol = '●   ' if weakness == weaknesses[-1] else '●'
+            symbol = '● ' if weakness == weaknesses[-1] else '●'
+            weakness_string += symbol
             tag_line = tag_line_generator(text=symbol, color=color, underlined=False, bold=False, italic=False)
             tag_line_list.append(tag_line)
 
     if resistances is not None:
         if len(resistances) > 1:
-            resistance_string = "Resistances: "
+            resistance_string = "  Resistances: "
         else:
-            resistance_string = "Resistance: "
-
-        if weaknesses is None:
-            resistance_string = " " + resistance_string
+            resistance_string = "  Resistance: "
 
         tag_line = tag_line_generator(text=resistance_string, color=energy_color, underlined=False, bold=False,
                                       italic=False)
@@ -294,7 +293,7 @@ def weakness_and_resistance(weaknesses: list, resistances: list,
 
         for resistance in resistances:
             color = energy_type_dict[resistance.type]["main_color"]
-            tag_line = tag_line_generator(text="● ", color=color, underlined=False, bold=False, italic=False)
+            tag_line = tag_line_generator(text="●", color=color, underlined=False, bold=False, italic=False)
             tag_line_list.append(tag_line)
 
     # Spaces
@@ -321,9 +320,6 @@ def weakness_resistance_spaces(weakness_string: str, resistance_string: str, pri
         spaces += " "
         width += + 4.2
 
-    if len(weakness_string) > 1 and len(spaces) > 1:
-        spaces = spaces[:-3]
-
     return spaces
 
 
@@ -349,10 +345,14 @@ def subtype_line(subtypes:list[str], lore_lines:list) -> list:
     return lore_lines
 
 
-def rules_line(rules:list[str], lore_lines:list) -> list:
+def rules_line(rules: list[str], lore_lines: list, price: float) -> list:
     for rule in rules:
         lines = wrap_text(rule, 188, letter_widths)
         for line in lines:
+            if line == lines[-1]:
+                price_str = f'${price}'
+                spaces = weakness_resistance_spaces(f'  {line}', '', price_str)
+                line = line + spaces + price_str
             tag_line = tag_line_generator(text=f"  {line}", color="gray", underlined=False, bold=False, italic=True)
             lore_lines.append(tag_line)
     
@@ -402,7 +402,7 @@ def symbol_tag_lines(name:list) -> list:
     return special_tag_lines
 
 
-def trainer_tag_line(name:list, trainer:str) -> tuple:
+def trainer_tag_line(name: list, trainer: str) -> tuple:
     predecessor = f"{name[0]} "
     if trainer == "Team":
         predecessor = f"{name[0]} {name[1]} "
@@ -415,7 +415,7 @@ def trainer_tag_line(name:list, trainer:str) -> tuple:
     return predecessor_tag_line, successor
 
 
-def rarity_symbol(rarity:str) -> dict:
+def rarity_symbol(rarity: str) -> dict:
     rarity_symbol = rarity_dict[rarity]["symbol"]
     color = rarity_dict[rarity]["color"]
     tag_line = headline_generator(text=rarity_symbol, color=color, underlined=False, bold=False, italic=False)
@@ -517,7 +517,7 @@ def format_pokemon_card(card) -> list:
             lore_lines = seperator_line(lore_lines)
     # Weakness and resistance
     if card.weaknesses is not None or card.resistances is not None:
-        lore_lines = weakness_and_resistance(card.weaknesses, card.resistances, type_color, lore_lines)
+        lore_lines = weakness_and_resistance(card.weaknesses, card.resistances, type_color, lore_lines, card.price)
     # Flavor text
     if card.flavor_text is not None:
         lore_lines = flavor_text_lines(card.flavor_text, lore_lines)
@@ -542,7 +542,7 @@ def format_trainer_card(card) -> list:
         else:
             special_rules[card.name] = {"count": 1}
             special_rules[card.name]["rules"] = rules
-        lore_lines = rules_line(rules, lore_lines)
+        lore_lines = rules_line(rules, lore_lines, card.price)
         lore_lines = seperator_line(lore_lines)
     # Printed total, set, release year
     lore_lines = number_set_release_line(card, lore_lines)
@@ -553,14 +553,14 @@ def format_trainer_card(card) -> list:
 def format_energy_card(card) -> list:
     lore_lines = []
     if card.rules is not None:
-        lore_lines = rules_line(card.rules, lore_lines)
+        lore_lines = rules_line(card.rules, lore_lines, card.price)
         lore_lines = seperator_line(lore_lines)
         lore_lines = number_set_release_line(card, lore_lines)
     
     return lore_lines
 
 
-def wrap_text(text, max_width, letter_widths):
+def wrap_text(text, max_width, letter_widths, include_price=False):
     words = text.split()  # Split the text into individual words
     lines = []
     current_line = ""
@@ -736,7 +736,7 @@ class Card_Data:
         self.set_name['name'] = name_tag_line_list  
         self.set_lore['lore'] = lore_lines
         
-        if self.supertype in ["Trainer", "Energy"]: # Duplicate cards
+        if self.supertype in ["Trainer", "Energy"]:     # Duplicate cards
             if self.name not in energy_trainer_cards:
                 energy_trainer_cards[self.name] = self.functions
             else:
