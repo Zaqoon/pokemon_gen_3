@@ -491,7 +491,7 @@ def format_header(card) -> list:
             successor_tag_line = headline_generator(text=successor, color=color, underlined=False, bold=True, italic=False)
             name_tag_line.append(successor_tag_line)
         else:
-            pokemon_name = copy.deepcopy(name)
+            pokemon_name = name
             for special_string in special_strings_dict:
                 if special_string in pokemon_name:
                     pokemon_name.remove(special_string)
