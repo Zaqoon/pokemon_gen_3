@@ -20,12 +20,22 @@ def get_prices(target) -> dict:
     promo_nmbr = 0
     prices_dict = {}
     energy_type_list = ['Grass', 'Water', 'Fire', 'Lightning', 'Fighting', 'Psychic', 'Colorless', 'Darkness', 'Metal']
+    energy_price = {
+        'Darkness Energy': {
+            'Price': 0,
+            'Number': 30007
+        },
+        'Metal Energy': {
+            'Price': 15.84,
+            'Number': 30008
+        }
+    }
     for set in target:
         print(f"Populating cards from \"{set}\"")
         cards = Card.where(q=f'set.id:{set}')
         sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
-            if card.rarity is None or card.name.replace(" Energy", "") in energy_type_list:
+            if card.name not in energy_price and card.name.replace(" Energy", "") in energy_type_list:
                 continue
 
             try:
@@ -33,12 +43,24 @@ def get_prices(target) -> dict:
                 converted_price = euro_to_usd(price)
             except AttributeError:
                 converted_price = 0.01
+
             if card.rarity == 'Promo':
                 promo_nmbr += 1
                 nmbr = promo_nmbr + 66000
             else:
                 crd_nmbr += 1
                 nmbr = crd_nmbr + 34000
+
+            if card.name in energy_price:
+                nmbr = energy_price[card.name]['Number']
+                if energy_price[card.name]['Price'] == 0:
+                    energy_price[card.name]['Price'] = converted_price
+                elif energy_price[card.name]['Price'] > 0:
+                    converted_price = energy_price[card.name]['Price']
+
+            if str(nmbr) in prices_dict:
+                continue
+
             prices_dict[str(nmbr)] = converted_price
             print(f'{nmbr}: {converted_price}')
 

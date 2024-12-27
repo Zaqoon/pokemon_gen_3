@@ -690,6 +690,8 @@ class Card_Data:
         if str(self.static_poke_num_cntr) in price_dict:
             self.price = price_dict[str(self.static_poke_num_cntr)]
 
+        print(str(self.static_poke_num_cntr) + ' ' + self.name)
+
         custom_data = [self.supertype]
         if self.supertype != "Energy":
             self.hp = card.hp

@@ -353,7 +353,9 @@ def deck_special_cards(type_specific_cards: dict):
 if __name__ == '__main__':
     populate_data(target_set_list)
 
-    energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy', 'Lightning Energy', 'Psychic Energy', 'Water Energy']
+    energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy',
+                   'Lightning Energy', 'Psychic Energy', 'Water Energy']
+
     type_specific_cards = {
             'Grass': [],
             'Fire': [],
