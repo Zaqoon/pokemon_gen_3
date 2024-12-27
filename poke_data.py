@@ -349,10 +349,27 @@ def rules_line(rules: list[str], lore_lines: list, price: float) -> list:
     for rule in rules:
         lines = wrap_text(rule, 188, letter_widths)
         for line in lines:
-            if line == lines[-1]:
+            if rule == rules[-1] and line == lines[-1]:
                 price_str = f'${price}'
                 spaces = weakness_resistance_spaces(f'  {line}', '', price_str)
-                line = line + spaces + price_str
+                if len(spaces) < 1:
+                    tag_line = tag_line_generator(text=f"  {line}", color="gray", underlined=False, bold=False,
+                                                  italic=True)
+                    lore_lines.append(tag_line)
+                    spaces = weakness_resistance_spaces(f'  ', '', price_str)
+
+                    tag_line = tag_line_generator(text=f'  {spaces}{price_str}', color='#4caf50', underlined=False,
+                                                  bold=False, italic=False)
+                    lore_lines.append(tag_line)
+                    break
+
+                tl1 = tag_line_generator(text=f"  {line}", color="gray", underlined=False, bold=False, italic=True)
+                tl2 = tag_line_generator(text=f'{spaces}{price_str}', color='#4caf50',
+                                         underlined=False, bold=False, italic=False)
+                tag_lines = [tl1, tl2]
+                lore_lines.append(tag_lines)
+                break
+
             tag_line = tag_line_generator(text=f"  {line}", color="gray", underlined=False, bold=False, italic=True)
             lore_lines.append(tag_line)
     

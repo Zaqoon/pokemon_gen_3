@@ -47,7 +47,7 @@ def get_prices(target) -> dict:
             if card.rarity == 'Promo':
                 promo_nmbr += 1
                 nmbr = promo_nmbr + 66000
-            else:
+            elif card.name not in energy_price:
                 crd_nmbr += 1
                 nmbr = crd_nmbr + 34000
 
