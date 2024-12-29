@@ -35,6 +35,7 @@ def get_prices(target) -> dict:
         cards = Card.where(q=f'set.id:{set}')
         sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
+            nmbr = None
             if card.name not in energy_price and card.name.replace(" Energy", "") in energy_type_list:
                 continue
 
