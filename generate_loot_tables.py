@@ -1,30 +1,15 @@
-from pokemontcgsdk import Card
-from pokemontcgsdk import RestClient
-
-import re
 import json
 import os
+import pickle
 import shutil
 
-from dotenv import load_dotenv
-from poke_data import Card_Data
 from villagers import sets
 
-load_dotenv()
-API_KEY = os.getenv('API_KEY')
-RestClient.configure(API_KEY)
 
 target_set_list = ['ex1', 'ex2', 'ex3', 'ex4', 'np', 'ex5', 'ex6', 'ex7', 'ex8',
                    'ex9', 'ex10', 'ex11', 'ex12', 'ex13', 'ex14', 'ex15', 'ex16']
 
-#target_set_list = ['ex1']
-
-card_data = {gen: [] for gen in target_set_list}
-
-with open('prices.json', 'r') as file:
-    price_dict = json.load(file)
-
-set_name = {
+set_names = {
     'ex1': 'Ruby & Sapphire', 'ex2': 'Sandstorm', 'ex3': 'Dragon', 'ex4': 'Team Magma vs Team Aqua', 'ex5': 'Hidden Legends',
     'ex6': 'FireRed & LeafGreen', 'ex7': 'Team Rocket Returns', 'ex8': 'Deoxys', 'ex9': 'Emerald', 'ex10': 'Unseen Forces',
     'ex11': 'Delta Species', 'ex12': 'Legend Maker', 'ex13': 'Holon Phantoms', 'ex14': 'Crystal Guardians', 'ex15': 'Dragon Frontiers',
@@ -179,7 +164,7 @@ weight_dict_odds = {
 }
 
 
-def weight_calculation(rarity_dict:dict, set:str) -> dict:
+def weight_calculation(rarity_dict: dict, set: str) -> dict:
     card_count = {rarity: 0 for rarity in rarity_dict}
     weight_dict = card_count.copy()
     for card in card_data[set]: # Count cards in all rarity groups
@@ -216,31 +201,6 @@ set_color = {
     "ex11": "#C0C0C0", "ex12": "#d2b48c", "ex13": "#9966CC", "ex14": "#b0e0e6", "ex15": "#fcb738",
     "ex16": "#820000", "np": "purple"
 }
-
-
-def sort_item(card):
-    match = re.match(r'^([A-Za-z]*)(\d+)(.*)', card.number)
-    if match:
-        prefix = match.group(1)  # Capture any letters or characters before the numeric part
-        numeric_part = int(match.group(2))  # Capture the numeric part as an integer
-        suffix = match.group(3)  # Capture any characters after the numeric part
-        if prefix:
-            return (0, prefix, numeric_part, suffix)  # Sort by prefix, then numeric part, and finally suffix
-        else:
-            return (1, '', numeric_part, suffix)  # Sort non-prefix cards after prefix cards
-    else:
-        return (0, '', 0, '')  # Default value if no match is found
-
-
-def populate_data(target):
-    for set in target:
-        print(f'Populating cards from \'{set}\'')
-        cards = Card.where(q=f'set.id:{set}')
-        sorted_cards = sorted(cards, key=sort_item)
-        for card in sorted_cards:
-            currCard_Data = Card_Data(card, price_dict)
-            currCard_Data.generate_components()
-            card_data[set].append(currCard_Data)
 
 
 def add_entry(pokeTag, weight_dict):
@@ -301,7 +261,7 @@ def add_rare_card(set, loot_table, weight):
                 {
                   'color': set_color[set],
                   'italic': False,
-                  'text': set_name[set]
+                  'text': set_names[set]
                 }
               ],
               'mode': 'append'
@@ -351,7 +311,8 @@ def deck_special_cards(type_specific_cards: dict):
 
 
 if __name__ == '__main__':
-    populate_data(target_set_list)
+    with open('data/api_data.pkl', 'rb') as file:
+        card_data = pickle.load(file)
 
     energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy',
                    'Lightning Energy', 'Psychic Energy', 'Water Energy']

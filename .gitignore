@@ -13,6 +13,9 @@ boosters/
 decks/
 expansions/
 
+# Pokemon files
+data/api_data.pkl
+
 # Distribution / packaging
 .Python
 build/

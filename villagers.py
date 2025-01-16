@@ -10,7 +10,7 @@ from villager_data import TrainerData
 from villager_data import EnergyData
 
 
-with open('data.json', 'r', encoding="utf-8") as file:
+with open('data/data.json', 'r', encoding="utf-8") as file:
     data = json.load(file)
     sets = data['sets']
 

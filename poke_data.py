@@ -9,7 +9,7 @@ import json
 import copy
 
 
-with open('data.json', 'r', encoding="utf-8") as file:
+with open('data/data.json', 'r', encoding="utf-8") as file:
     data = json.load(file)
 
     energy_type_dict = data['energy_type_dict']
