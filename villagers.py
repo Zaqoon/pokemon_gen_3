@@ -230,9 +230,17 @@ def get_trainer_cards(deck_dict: dict) -> dict:
         4: random.choices(list(subtype_weights.keys()), weights=subtype_weights.values())[0]
     }
 
+    trainer_cards = []
     for i in range(1, 5):
         subtype = subtype_selector[i]
-        random_card = random.choices(trainer_data[subtype], weights=weights[subtype])[0]
+        while True:
+            random_card = random.choices(trainer_data[subtype], weights=weights[subtype])[0]
+            if random_card in trainer_cards:
+                continue
+            else:
+                trainer_cards.append(random_card)
+                break
+
         card_index = trainer_data[subtype].index(random_card)
         weights[card_index] = 0
         components = random_card.components
