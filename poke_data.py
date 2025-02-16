@@ -729,7 +729,7 @@ class Card_Data:
         self.set_lore = {'function': 'set_lore', 'lore': [], 'mode': 'append'}
         self.set_components = {'function': 'set_components', 'components': {
             'hide_additional_tooltip': {},
-            'custom_model_data': self.static_poke_num_cntr,
+            'custom_model_data': {'floats': [self.static_poke_num_cntr]},
             'map_id': self.static_poke_num_cntr
         }}
         if self.rarity in ["Rare Holo", "Rare Secret", "Rare Holo EX", "Rare Holo Star"]:
