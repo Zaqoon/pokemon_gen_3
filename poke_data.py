@@ -447,9 +447,9 @@ def nbt_tags(card) -> list:
     if card.rarity in ["Rare Holo", "Rare Secret", "Rare Holo EX", "Rare Holo Star"]:
         nbt_tags_list.append({"Enchantments": [{"id": "minecraft:infinity", "lvl": 1}]})
     if card.rarity != "Promo":
-        card_nr = 34000 + Card_Data.static_poke_num_cntr
+        card_nr = 34000 + CardData.static_poke_num_cntr
     else:
-        card_nr = 66000 + Card_Data.static_poke_num_cntr
+        card_nr = 66000 + CardData.static_poke_num_cntr
     if card_name in energy_type_dict:
         if energy_type_dict[card_name]["card_nr"]:
             card_nr = energy_type_dict[card_name]["card_nr"]
@@ -657,7 +657,7 @@ class SetEncoder(json.JSONEncoder):
         return super(SetEncoder, self).default(obj)
 
 
-class Card_Data:
+class CardData:
     name: str
     supertype: str
     number: str
@@ -682,11 +682,11 @@ class Card_Data:
     def __init__(self, card: Card, price_dict: dict) -> None:
         if card.rarity is not None and card.name.replace(" Energy", "") not in energy_type_dict:
             if card.rarity == "Promo":
-                Card_Data.promo_poke_num_cntr += 1
-                self.static_poke_num_cntr = Card_Data.promo_poke_num_cntr + 66000
+                CardData.promo_poke_num_cntr += 1
+                self.static_poke_num_cntr = CardData.promo_poke_num_cntr + 66000
             else:
-                Card_Data.static_poke_num_cntr += 1
-                self.static_poke_num_cntr = Card_Data.static_poke_num_cntr + 34000
+                CardData.static_poke_num_cntr += 1
+                self.static_poke_num_cntr = CardData.static_poke_num_cntr + 34000
         
         if card.name.replace(" Energy", "") in energy_type_dict:
             self.static_poke_num_cntr = energy_type_dict[card.name.replace(" Energy", "")]['card_nr']

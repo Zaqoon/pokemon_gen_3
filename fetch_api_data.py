@@ -1,7 +1,7 @@
 from pokemontcgsdk import Card
 from pokemontcgsdk import RestClient
 
-from poke_data import Card_Data
+from poke_data import CardData
 
 from dotenv import load_dotenv
 import os
@@ -39,7 +39,7 @@ def populate_data(target: list) -> dict:
         cards = Card.where(q=f'set.id:{set_name}')
         sorted_cards = sorted(cards, key=sort_item)
         for card in sorted_cards:
-            card_object = Card_Data(card, price_dict)
+            card_object = CardData(card, price_dict)
             card_object.generate_components()
             card_data[set_name].append(card_object)
 
