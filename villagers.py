@@ -555,5 +555,5 @@ if __name__ == "__main__":
     card_weights = sort_card_weights()
     trainer_weights = sort_trainer_weights()
 
-    construct_deck_files(300, 5)
+    construct_deck_files(300, 6)
     construct_booster_files(200, 5)
