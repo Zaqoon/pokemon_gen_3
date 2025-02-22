@@ -56,6 +56,21 @@ def export_functions(path: str):
         copy_paste_folder(s, dest)
 
 
+def export_loot_tables():
+    print('Exporting loot tables...')
+    path = f'C:/Users/{USER}/AppData/Roaming/.minecraft/saves/Naraka/datapacks/tcg/data/tcg/loot_table'
+    source = 'loot_tables'
+    for set_id in os.listdir(source):
+        dest = f'{path}/{set_id}'
+        if os.path.exists(dest):
+            shutil.rmtree(dest)
+
+        # Paste folder
+        s = f'{source}/{set_id}'
+        copy_paste_folder(s, dest)
+        print(f'    Successfully transferred loot_tables/{set_id} to {path}/{set_id}.')
+
+
 def copy_paste_file(source: str, destination: str):
     if os.path.isfile(source):
         shutil.copy2(source, destination)
@@ -80,3 +95,4 @@ if __name__ == '__main__':
     export_boosters(destination)
     export_expansion_files(destination)
     export_functions(destination)
+    export_loot_tables()
