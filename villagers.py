@@ -350,14 +350,14 @@ def deck(deck_amount: int) -> dict:
                 "count": 1,
                 "components": {
                     "minecraft:custom_name": '{"text":"Sapphire","italic":false,"color":"aqua"}',
-                    "custom_model_data": 1,
+                    "custom_model_data": {"floats": [1]},
                     "custom_data": {"sapphire": "1b"}}},
             "sell": {
                 "id": "minecraft:bundle",
                 "count": 1,
                 "components": {
                     "custom_name": f'{{"bold":true,"color":"{type_hex[deck_type]}","italic":false,"text":"{deck_type} Deck"}}',
-                    "custom_model_data": custom_model_data_dict[deck_type],
+                    "custom_model_data": {"floats": [custom_model_data_dict[deck_type]]},
                     "bundle_contents": []
                 }
             }
@@ -367,7 +367,7 @@ def deck(deck_amount: int) -> dict:
         for rarity in ["Common", "Uncommon", "Rare"]:
             deck_dict, evolution_names = add_pokemon_cards(evolution_names, deck_type, deck_dict, rarity)
 
-        rare_card_string = f"{{\"custom_name\":'{{\"text\":\"Holographic {deck_type} Card\",\"color\":\"aqua\",\"italic\":false}}',\"lore\":['{{\"text\":\"Right click to reveal card.\"}}'],\"custom_model_data\":1,\"enchantment_glint_override\":true,\"custom_data\":{{{deck_type.lower()}_rares_gen3:1b}}}}"
+        rare_card_string = f"{{\"custom_name\":'{{\"text\":\"Holographic {deck_type} Card\",\"color\":\"aqua\",\"italic\":false}}',\"lore\":['{{\"text\":\"Right click to reveal card.\"}}'],\"custom_model_data\":{{\"floats\": [1]}},\"enchantment_glint_override\":true,\"custom_data\":{{{deck_type.lower()}_rares_gen3:1b}}}}"
         deck_dict = add_to_deck(deck_dict, 1, 1, rare_card_string, "rare_card_dict")
         deck_dict = get_trainer_cards(deck_dict)
         deck_dict = energy_cards(deck_type, deck_dict)
@@ -382,13 +382,13 @@ def deck(deck_amount: int) -> dict:
 
 
 def promo() -> str:
-    promo_dict = """{maxUses:9,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"light_purple","italic":false,"text":"Star"}',"minecraft:custom_model_data":5,"minecraft:custom_data":{greenstar:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Promo Pack"}',"minecraft:lore":['{"color":"#9fd0e0","italic":false,"text":"Nintendo Black Star Promos"}','{"text":"2003-2006","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":20,"minecraft:custom_data":{np:1}}}}"""
+    promo_dict = """{maxUses:9,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"light_purple","italic":false,"text":"Star"}',"minecraft:custom_model_data":{"floats": [5]},"minecraft:custom_data":{greenstar:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Promo Pack"}',"minecraft:lore":['{"color":"#9fd0e0","italic":false,"text":"Nintendo Black Star Promos"}','{"text":"2003-2006","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":{"floats":[20]},"minecraft:custom_data":{np:1}}}}"""
     
     return data_strings["data_modify_dict"] % "cartographer" + promo_dict
 
 
 def booster(total_boosters:int) -> List[str]:
-    trade_dict = """{maxUses:%s,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"yellow","italic":false,"text":"Ruby"}',"minecraft:custom_model_data":2,"minecraft:custom_data":{ruby:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Booster Pack"}',"minecraft:lore":['{"text":"%s","color":"%s","italic":false}','{"text":"%s","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":%s,"minecraft:custom_data":{ex:%s}}}}"""
+    trade_dict = """{maxUses:%s,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"yellow","italic":false,"text":"Ruby"}',"minecraft:custom_model_data":{"floats": [2]},"minecraft:custom_data":{ruby:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Booster Pack"}',"minecraft:lore":['{"text":"%s","color":"%s","italic":false}','{"text":"%s","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":{"floats":[%s]},"minecraft:custom_data":{ex:%s}}}}"""
 
     trades = []
     exclude_set_cmd = []
