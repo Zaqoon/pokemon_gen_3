@@ -234,9 +234,9 @@ def add_rare_card(set, loot_table, weight):
             {
               'function': 'set_components',
               'components': {
-                'minecraft:custom_model_data': 1,
-                'minecraft:custom_data': {
-                f'{set}_{loot_table.lower()}_rare': 1
+                'custom_model_data': {"floats": [1]},
+                'custom_data': {
+                    f'{set}_{loot_table.lower()}_rare': 1
                 },
                 'minecraft:enchantment_glint_override': True
               }
