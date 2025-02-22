@@ -44,7 +44,8 @@ template = {
     "reset_score": "scoreboard players reset @a[scores={booster=%s}] booster",
     "que_next_card": "execute as @a[scores={booster=%s}] at @s run schedule function %s:%s 5t",
     "flip_card": "execute as @a[scores={right_click_carrot=1..}] at @s if items entity @s weapon.* minecraft:carrot_on_a_stick[custom_data={%s}] run function %s:%s",
-    "flipped_card": "execute as @s run loot give @s loot tcg:%s/%s"
+    "flipped_card": "execute as @s run loot give @s loot tcg:%s/%s",
+    "flip_sound": "playsound item.dye.use master @s ~ ~ ~ 1 1 1"
 }
 
 
@@ -120,6 +121,7 @@ for set in target_set_list:
         with open(f"{directory}/{card}.mcfunction", "w") as file:
             lines.append(template["clear_booster"] % (custom_data, custom_data))
             lines.append(template["flipped_card"] % (set, f"{card}_rare"))
+            lines.append(template["flip_sound"])
             mcfunction = "\n".join(lines)
             file.write(mcfunction)
 with open(f"{file_directory}/tick_function.mcfunction", "w") as file:
