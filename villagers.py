@@ -175,6 +175,9 @@ def add_pokemon_cards(evolution_names:List[str], pokemon_type:str, deck_dict:str
                 weights[i] = 0
             elif card.evolves_from in evolution_names and card.evolves_from != 'Basic':
                 weights[i] *= (8 * basic_count) // evolution_count
+
+            if weights[i] > 0 and card.name in [c.name for c in card_list]:
+                weights[i] *= 0.5
     
     while added_cards < card_amount[rarity]['Unique Cards']:
         card = random.choices(pokemon_data[pokemon_type][rarity], weights=weights, k=1)[0]
