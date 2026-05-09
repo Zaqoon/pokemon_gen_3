@@ -1,3 +1,5 @@
+import time
+
 from pokemontcgsdk import Card
 from pokemontcgsdk import RestClient
 
@@ -35,13 +37,21 @@ def populate_data(target: list) -> dict:
     card_data = {set_id: [] for set_id in target}
 
     for set_name in target:
-        print(f'Populating cards from \'{set_name}\'')
-        cards = Card.where(q=f'set.id:{set_name}')
-        sorted_cards = sorted(cards, key=sort_item)
-        for card in sorted_cards:
-            card_object = CardData(card, price_dict)
-            card_object.generate_components()
-            card_data[set_name].append(card_object)
+        while True:
+            try:
+                print(f'Populating cards from \'{set_name}\'')
+                cards = Card.where(q=f'set.id:{set_name}')
+                sorted_cards = sorted(cards, key=sort_item)
+                for card in sorted_cards:
+                    card_object = CardData(card, price_dict)
+                    card_object.generate_components()
+                    card_data[set_name].append(card_object)
+
+                time.sleep(60)
+                break
+            except:
+                time.sleep(420)
+                continue
 
     return card_data
 

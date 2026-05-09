@@ -9,7 +9,6 @@ from villager_data import VillagerData
 from villager_data import TrainerData
 from villager_data import EnergyData
 
-
 with open('data/data.json', 'r', encoding="utf-8") as file:
     data = json.load(file)
     sets = data['sets']
@@ -46,12 +45,13 @@ data_strings = {
     "rare_card_dict": '''{id: "minecraft:carrot_on_a_stick",count: %s,components: %s}'''
 }
 
-deck_color = {"Grass": "green", "Fire": "red", "Water": "blue", "Fighting": "brown","Lightning": "yellow",
+deck_color = {"Grass": "green", "Fire": "red", "Water": "blue", "Fighting": "brown", "Lightning": "yellow",
               "Psychic": "dark_purple", "Colorless": "gray", "Metal": "dark_gray", "Darkness": "dark_aqua"}
 
 weights = [sets[key]["weight"] for key in sets]
 
-predicate_list = ["Blaine's ", "Brock's ", "Erika's ", "Lt. Surge's ", "Misty's ", "Rocket's ", "Sabrina's ", "Giovanni's ", "Koga's ", "Shining ",
+predicate_list = ["Blaine's ", "Brock's ", "Erika's ", "Lt. Surge's ", "Misty's ", "Rocket's ", "Sabrina's ",
+                  "Giovanni's ", "Koga's ", "Shining ",
                   "Team Aqua's ", "Team Magma's ", "Holon's ", "Dark "]
 
 
@@ -60,7 +60,7 @@ def populate_villager_data() -> None:
         pokemon_data[energy_type] = {'Common': [], 'Uncommon': [], 'Rare': []}
     for set in sets:
         for rarity in ['Common', 'Uncommon', 'Rare']:
-            with open(f'loot_tables/{set}/{rarity}.json', 'r') as file:
+            with open(f'loot_tables/{set}/{rarity}.json', 'r', encoding='utf-8') as file:
                 loot_table = json.load(file)
             for entry in loot_table['pools'][0]['entries']:
                 functions = entry['functions']
@@ -102,7 +102,7 @@ def populate_energy_cards() -> None:
         'rare': [10, 11]
     }
     for rarity in entry_numbers:
-        with open(f'loot_tables/ex1/{rarity}.json', 'r') as file:
+        with open(f'loot_tables/ex1/{rarity}.json', 'r', encoding='utf-8') as file:
             loot_table = json.load(file)
         for entry_num in entry_numbers[rarity]:
             entry = loot_table['pools'][0]['entries'][entry_num]
@@ -123,7 +123,7 @@ def sort_card_weights() -> dict:
         for rarity in rarities:
             villager_data_weights = [villager_data.weight for villager_data in pokemon_data[pokemon_type][rarity]]
             card_weights[pokemon_type][rarity] = villager_data_weights
-    
+
     return card_weights
 
 
@@ -135,29 +135,29 @@ def sort_trainer_weights() -> dict:
     return card_weights
 
 
-def add_pokemon_cards(evolution_names:List[str], pokemon_type:str, deck_dict:str, rarity:str) -> tuple:
+def add_pokemon_cards(evolution_names: List[str], pokemon_type: str, deck_dict: str, rarity: str) -> tuple:
     card_amount = {
         "Common": {
             "Unique Cards": 5,
             "Stack Min": 2,
             "Stack Max": 4
-            },
+        },
         "Uncommon": {
             "Unique Cards": 3,
             "Stack Min": 1,
             "Stack Max": 2
-            },
+        },
         "Rare": {
             "Unique Cards": 1,
             "Stack Min": 2,
             "Stack Max": 2
-            },
+        },
         "Trainer": {
             "Unique Cards": 5,
             "Stack Min": 2,
             "Stack Max": 4
-            }
         }
+    }
     card_list = []
     added_cards = 0
     weights = card_weights[pokemon_type][rarity][:]
@@ -171,16 +171,23 @@ def add_pokemon_cards(evolution_names:List[str], pokemon_type:str, deck_dict:str
                 evolution_count += 1
 
         for i, card in enumerate(pokemon_data[pokemon_type][rarity]):
-            if card.evolves_from not in evolution_names and card.evolves_from != 'Basic':
+            if (
+                    card.evolves_from not in evolution_names and
+                    card.name not in evolution_names and
+                    card.evolves_from != 'Basic'
+            ):
                 weights[i] = 0
             elif card.evolves_from in evolution_names and card.evolves_from != 'Basic':
                 weights[i] *= (8 * basic_count) // evolution_count
 
             if weights[i] > 0 and card.name in [c.name for c in card_list]:
                 weights[i] *= 0.5
-    
+
     while added_cards < card_amount[rarity]['Unique Cards']:
         card = random.choices(pokemon_data[pokemon_type][rarity], weights=weights, k=1)[0]
+
+        if card.name in [c.name for c in card_list]:
+            continue
 
         card_index = pokemon_data[pokemon_type][rarity].index(card)
         weights[card_index] = 0
@@ -196,7 +203,11 @@ def add_pokemon_cards(evolution_names:List[str], pokemon_type:str, deck_dict:str
         if card.evolves_from in evolution_names:
             evolution_names.remove(card.evolves_from)
             for i, card in enumerate(pokemon_data[pokemon_type][rarity]):
-                if card.evolves_from not in evolution_names and card.evolves_from != 'Basic':
+                if (
+                        card.evolves_from not in evolution_names and
+                        card.name not in evolution_names and
+                        card.evolves_from != 'Basic'
+                ):
                     weights[i] = 0
         added_cards += 1
 
@@ -259,9 +270,9 @@ def energy_cards(deck_type, deck_dict) -> dict:
         if not energies:
             energies = [energy for energy in energy_data if energy not in ['Darkness', 'Metal', deck_type]]
         energy = energies.pop(random.randint(0, len(energies) - 1))
-        
+
         return energy
-    
+
     energy_dict = {
         "Grass": {
             "energy_entry": 'Grass',
@@ -336,16 +347,19 @@ def deck(deck_amount: int) -> dict:
     for i in range(1, deck_amount + 1):
         decks[f"Deck{i}"] = None
 
-    custom_model_data_dict = {"Grass": 101, "Fire": 102, "Water": 103, "Fighting": 5, "Lightning": 14, "Psychic": 9, "Colorless": 16, "Darkness": 1, "Metal": 3}
+    custom_model_data_dict = {"Grass": 101, "Fire": 102, "Water": 103, "Fighting": 5, "Lightning": 14, "Psychic": 9,
+                              "Colorless": 16, "Darkness": 1, "Metal": 3}
     bundle_dict = {
         "Grass": "green", "Fire": "red", "Water": "blue", "Fighting": "brown", "Lightning": "yellow",
         "Psychic": "purple", "Colorless": "light_gray", "Darkness": "black", "Metal": "dark_gray"
     }
     deck_types = ["Grass", "Fire", "Water", "Fighting", "Lightning", "Psychic", "Colorless", "Darkness", "Metal"]
-    deck_weight = {"Grass": 300,"Fire": 300,"Water": 300,"Fighting": 150,"Lightning": 150,"Psychic": 150, "Colorless": 150, "Darkness": 20, "Metal": 12}
-    type_hex = {"Grass": "#4CAF50","Fire": "#E53935","Water": "#2979FF","Fighting": "#8D6E63","Lightning": "#FDD835","Psychic": "#BA68C8",
-                "Colorless": "gray", "Darkness": "#087575", "Metal": "#C0C0C0" }
-    
+    deck_weight = {"Grass": 300, "Fire": 300, "Water": 300, "Fighting": 150, "Lightning": 150, "Psychic": 150,
+                   "Colorless": 150, "Darkness": 20, "Metal": 12}
+    type_hex = {"Grass": "#4CAF50", "Fire": "#E53935", "Water": "#2979FF", "Fighting": "#8D6E63",
+                "Lightning": "#FDD835", "Psychic": "#BA68C8",
+                "Colorless": "gray", "Darkness": "#087575", "Metal": "#C0C0C0"}
+
     while decks[f"Deck{deck_amount}"] is None:
         deck_type = random.choices(deck_types, weights=list(deck_weight.values()))[0]
         deck_types.remove(deck_type)
@@ -356,14 +370,15 @@ def deck(deck_amount: int) -> dict:
                 "id": "minecraft:emerald",
                 "count": 1,
                 "components": {
-                    "minecraft:custom_name": '{"text":"Sapphire","italic":false,"color":"aqua"}',
+                    "minecraft:custom_name": {"text": "Sapphire", "italic": False, "color": "aqua"},
                     "custom_model_data": {"floats": [1]},
                     "custom_data": {"sapphire": "1b"}}},
             "sell": {
                 "id": f"{bundle_dict[deck_type]}_bundle",
                 "count": 1,
                 "components": {
-                    "custom_name": f'{{"bold":true,"color":"{type_hex[deck_type]}","italic":false,"text":"{deck_type} Deck"}}',
+                    "custom_name": {"bold": True, "color": f"{type_hex[deck_type]}", "italic": False,
+                                    "text": f"{deck_type} Deck"},
                     "bundle_contents": []
                 }
             }
@@ -373,7 +388,7 @@ def deck(deck_amount: int) -> dict:
         for rarity in ["Common", "Uncommon", "Rare"]:
             deck_dict, evolution_names = add_pokemon_cards(evolution_names, deck_type, deck_dict, rarity)
 
-        rare_card_string = f"{{\"custom_name\":'{{\"text\":\"Holographic {deck_type} Card\",\"color\":\"aqua\",\"italic\":false}}',\"lore\":['{{\"text\":\"Right click to reveal card.\"}}'],\"custom_model_data\":{{\"floats\": [1]}},\"enchantment_glint_override\":true,\"custom_data\":{{{deck_type.lower()}_rares_gen3:1b}}}}"
+        rare_card_string = f"{{\"custom_name\":{{\"text\":\"Holographic {deck_type} Card\",\"color\":\"aqua\",\"italic\":false}},\"lore\":[{{\"text\":\"Right click to reveal card.\"}}],\"custom_model_data\":{{\"floats\": [1]}},\"enchantment_glint_override\":true,\"custom_data\":{{{deck_type.lower()}_rares_gen3:1b}}}}"
         deck_dict = add_to_deck(deck_dict, 1, 1, rare_card_string, "rare_card_dict")
         deck_dict = get_trainer_cards(deck_dict)
         deck_dict = energy_cards(deck_type, deck_dict)
@@ -388,19 +403,20 @@ def deck(deck_amount: int) -> dict:
 
 
 def promo() -> str:
-    promo_dict = """{maxUses:9,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"light_purple","italic":false,"text":"Star"}',"minecraft:custom_model_data":{"floats": [5]},"minecraft:custom_data":{greenstar:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Promo Pack"}',"minecraft:lore":['{"color":"#9fd0e0","italic":false,"text":"Nintendo Black Star Promos"}','{"text":"2003-2006","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":{"floats":[20]},"minecraft:custom_data":{np:1}}}}"""
-    
+    promo_dict = """{maxUses:9,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":{"color":"light_purple","italic":false,"text":"Star"},"minecraft:custom_model_data":{"floats": [5]},"minecraft:custom_data":{greenstar:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":{"bold":true,"italic":false,"text":"Promo Pack"},"minecraft:lore":[{"color":"#9fd0e0","italic":false,"text":"Nintendo Black Star Promos"},{"text":"2003-2006","color":"dark_purple","italic":true}],"minecraft:custom_model_data":{"floats":[20]},"minecraft:custom_data":{np:1}}}}"""
+
     return data_strings["data_modify_dict"] % "cartographer" + promo_dict
 
 
-def booster(total_boosters:int) -> List[str]:
-    trade_dict = """{maxUses:%s,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":'{"color":"yellow","italic":false,"text":"Ruby"}',"minecraft:custom_model_data":{"floats": [2]},"minecraft:custom_data":{ruby:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":'{"bold":true,"italic":false,"text":"Booster Pack"}',"minecraft:lore":['{"text":"%s","color":"%s","italic":false}','{"text":"%s","color":"dark_purple","italic":true}'],"minecraft:custom_model_data":{"floats":[%s]},"minecraft:custom_data":{ex:%s}}}}"""
+def booster(total_boosters: int) -> List[str]:
+    trade_dict = """{maxUses:%s,buy:{id:"minecraft:emerald",count:1,components:{"minecraft:custom_name":{"color":"yellow","italic":false,"text":"Ruby"},"minecraft:custom_model_data":{"floats": [2]},"minecraft:custom_data":{ruby:1b}}},sell:{id:"minecraft:carrot_on_a_stick",count:1,components:{"minecraft:custom_name":{"bold":true,"italic":false,"text":"Booster Pack"},"minecraft:lore":[{"text":"%s","color":"%s","italic":false},{"text":"%s","color":"dark_purple","italic":true}],"minecraft:custom_model_data":{"floats":[%s]},"minecraft:custom_data":{ex:%s}}}}"""
 
     trades = []
     exclude_set_cmd = []
     selected_sets = {}
     while len(selected_sets) < total_boosters:
-        random_set_key = random.choices(list(sets.keys()), weights=[sets[set_name]["weight"] for set_name in sets], k=1)[0]
+        random_set_key = \
+        random.choices(list(sets.keys()), weights=[sets[set_name]["weight"] for set_name in sets], k=1)[0]
         random_set = sets[random_set_key]
         if random_set in selected_sets.values():
             continue
@@ -411,11 +427,12 @@ def booster(total_boosters:int) -> List[str]:
         selected_sets[custom_model_data] = random_set
     sorted_selected_sets = dict(sorted(selected_sets.items()))
     for cmd, ss in sorted_selected_sets.items():
-        trade_str = trade_dict % (ss["max_uses"], ss["name"], ss["color"], ss["date"], cmd, ss["abbreviation"].replace('ex', ''))
+        trade_str = trade_dict % (ss["max_uses"], ss["name"], ss["color"], ss["date"], cmd,
+                                  ss["abbreviation"].replace('ex', ''))
         trade_str = data_strings["data_modify_dict"] % "cartographer" + trade_str
         trade_str = trade_str.replace("\n", "").replace("    ", "")
         trades.append(trade_str)
-    
+
     return trades
 
 
@@ -433,11 +450,7 @@ def fix_dict(deck_dict):
     unquote = re.sub(r"\"display\"", r"display", unquote)
     unquote = re.sub(r"\"tag\"", r"tag", unquote)
     unquote = re.sub(r"\"sell\"", r"sell", unquote)
-    unquote = re.sub(r"\"CustomModelData\"", r"CustomModelData", unquote)
     unquote = re.sub(r"\"Items\"", r"Items", unquote)
-    unquote = re.sub(r"\"Name\": \"\{\\\"text\\\":\\\"Sapphire\\\",\\\"italic\\\":false,\\\"color\\\":\\\"aqua\\\"\}\"", r"Name: '{\"text\":\"Sapphire\",\"italic\":false,\"color\":\"aqua\"}'", unquote)
-    unquote = re.sub(r"\"Name\": \"\{\\\"text\\\":\\\"Ruby\\\",\\\"italic\\\":false,\\\"color\\\":\\\"aqua\\\"\}\"", r"Name: '{\"text\":\"Ruby\",\"italic\":false,\"color\":\"yellow\"}'", unquote)
-    unquote = re.sub(r"\"Name\": \"\{\\\"text\\\":\\\"(.*?) Deck\\\",\\\"color\\\":\\\"(.*?)\\\",\\\"italic\\\":false\}\"",lambda match: f"Name: '{{\"text\":\"{match.group(1)} Deck\",\"color\":\"{match.group(2)}\",\"italic\":false}}'",unquote)
     unquote = re.sub(r"}\", \"{", r"},{", unquote)
 
     unquote = re.sub(r"\"components\"", r"components", unquote)
@@ -459,7 +472,7 @@ def fix_dict(deck_dict):
     escaped_string = escaped_string.replace('"lore": \'[{', '"lore": [\'{')
     escaped_string = escaped_string.replace('"lore": [""]', '"lore": []')
 
-    return escaped_string
+    return escaped_string.encode().decode('unicode-escape')
 
 
 def construct_deck_files(total_files, total_decks) -> None:
@@ -478,7 +491,7 @@ def construct_deck_files(total_files, total_decks) -> None:
     for i in range(1, total_files):
         print(f"Creating decks for set {i}")
         decks = deck(total_decks)
-    
+
         link_template = "execute as @p[x=-52711,y=113,z=108732,limit=1,sort=nearest] run function gen3_decks:decks%s/"
         links = []
         for index in range(1, total_decks):
@@ -488,12 +501,12 @@ def construct_deck_files(total_files, total_decks) -> None:
             deck_name = "Deck" + str(n + 1)
             file_path = path + f"/{i}"
             file_path = file_path + ".mcfunction"
-            with open(file_path, "w") as file:
+            with open(file_path, "w", encoding='utf-8') as file:
                 file.write(data_strings["data_modify_dict"] % "librarian" + decks[deck_name] + "\n")
                 if n < len(paths) - 1:
                     file.write(links[n] + str(i))
             print(f"    Created deck {n + 1}")
-    
+
     replace_villager_trades(total_files, profession='librarian')
 
 
@@ -503,7 +516,7 @@ def construct_booster_files(total_files, booster_amount) -> None:
     if os.path.exists(directory):
         shutil.rmtree(directory)
     os.makedirs(directory)
-    
+
     for i in range(1, total_files):
         promos = promo()
         boosters = booster(booster_amount)
@@ -515,7 +528,7 @@ def construct_booster_files(total_files, booster_amount) -> None:
             for b in boosters:
                 file.write(b + '\n')
         print(f"Successfully created booster file {i}")
-    
+
     replace_villager_trades(total_files, profession='cartographer')
 
 
@@ -535,7 +548,7 @@ def replace_villager_trades(num_files: int, profession: str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
     path = path + f'replace_villager_{profession_dict[profession]}_gen3.mcfunction'
-    with open(path, 'w') as file:
+    with open(path, 'w', encoding='utf-8') as file:
         for function in function_dict.values():
             file.write(function + '\n')
         file.write('\n')
@@ -550,11 +563,11 @@ if __name__ == "__main__":
     directory = 'decks'
     if os.path.exists(directory):
         shutil.rmtree(directory)
-    
+
     # Populate pokemon cards
     populate_villager_data()
     populate_energy_cards()
-    
+
     card_weights = sort_card_weights()
     trainer_weights = sort_trainer_weights()
 

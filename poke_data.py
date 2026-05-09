@@ -28,6 +28,7 @@ letter_widths = {
         'c': 6,
         'd': 6,
         'e': 6,
+        'é': 6,
         'f': 5,
         'g': 6,
         'h': 6,
@@ -85,7 +86,7 @@ letter_widths = {
         '7': 6,
         '8': 6,
         '9': 6,
-        '\'': 2,
+        "'": 2,
         '/': 6,
         '.': 2,
         ',': 2,
@@ -728,7 +729,7 @@ class CardData:
         self.set_name = {'function': 'set_name', 'name': []}
         self.set_lore = {'function': 'set_lore', 'lore': [], 'mode': 'append'}
         self.set_components = {'function': 'set_components', 'components': {
-            'hide_additional_tooltip': {},
+            'tooltip_display': {'hidden_components': ['map_id']},
             'custom_model_data': {'floats': [self.static_poke_num_cntr]},
             'map_id': self.static_poke_num_cntr
         }}

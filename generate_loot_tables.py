@@ -310,9 +310,17 @@ def deck_special_cards(type_specific_cards: dict):
             file.write(file_dict)
 
 
+def migrate_tooltip(card_data):
+    for s in target_set_list:
+        for card in card_data[s]:
+            if 'tooltip_display' in card.set_components['components']:
+                card.set_components['components']['tooltip_display'] = {'hidden_components': ['map_id']}
+    return card_data
+
+
 if __name__ == '__main__':
     with open('data/api_data.pkl', 'rb') as file:
-        card_data = pickle.load(file)
+        card_data = migrate_tooltip(pickle.load(file))
 
     energy_list = ['Fighting Energy', 'Fire Energy', 'Grass Energy',
                    'Lightning Energy', 'Psychic Energy', 'Water Energy']
@@ -351,12 +359,12 @@ if __name__ == '__main__':
         if set == 'np':
             weight = len(card_data[set]) + 90
             file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
-            with open(f'{directory}/promos.json', 'w') as file:
+            with open(f'{directory}/promos.json', 'w', encoding='utf-8') as file:
                 for card in card_data[set]:
                     card_object = [card.functions, card.rarity]
                     add_entry(card_object, weight)
                     weight -= 2
-                file_dict = json.dumps(file_dict, indent=4)
+                file_dict = json.dumps(file_dict, indent=4, ensure_ascii=False)
                 file.write(file_dict)
             continue
         else:
@@ -385,7 +393,7 @@ if __name__ == '__main__':
             if len(loot_table) > 0:
                 file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
                 if len(loot_table) > 0:
-                    with open(f'{directory}/{loot_table.lower()}.json', 'w') as file:
+                    with open(f'{directory}/{loot_table.lower()}.json', 'w', encoding='utf-8') as file:
                         if loot_table != 'Reverse':
                             for card_tag in tag_lines[loot_table]:
                                 add_entry(card_tag, weight_dict)
@@ -405,7 +413,7 @@ if __name__ == '__main__':
                             add_loot_table(set, 'uncommon', reverse_weight['Uncommon'])
                             add_loot_table(set, 'rare', reverse_weight['Rare'])
                             add_rare_card(set, loot_table, reverse_weight['Rare Holo'])
-                        file_dict = json.dumps(file_dict, indent=4)
+                        file_dict = json.dumps(file_dict, indent=4, ensure_ascii=False)
                         file.write(file_dict)
 
     # Rares for types in decks
@@ -416,9 +424,9 @@ if __name__ == '__main__':
     for loot_table in type_specific_cards.keys():
         print(f'Creating loot table for {loot_table} Holo Cards ...')
         file_dict = {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': []}]}
-        with open(f'{file_directory}/{loot_table.lower()}.json', 'w') as file:
+        with open(f'{file_directory}/{loot_table.lower()}.json', 'w', encoding='utf-8') as file:
             for card_tag in type_specific_cards[loot_table]:
                 weight = card_tag[1]
                 add_entry(card_tag, weight)
-            file_dict = json.dumps(file_dict, indent=4)
+            file_dict = json.dumps(file_dict, indent=4, ensure_ascii=False)
             file.write(file_dict)

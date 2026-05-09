@@ -8,17 +8,37 @@ patterns = {
     ]
 }
 
-predicate_list = ["Blaine's ", "Brock's ", "Erika's ", "Lt. Surge's ", "Misty's ", "Rocket's ", "Sabrina's ", "Giovanni's ", "Koga's ", "Shining ",
+predicate_list = ["Blaine's ", "Brock's ", "Erika's ", "Lt. Surge's ", "Misty's ", "Rocket's ", "Sabrina's ",
+                  "Giovanni's ", "Koga's ", "Shining ",
                   "Team Aqua's ", "Team Magma's ", "Holon's ", "Dark "]
 
 
-def extract_pokemon_name(functions:list) -> str:
+def fix_json(components):
+    # MC 1.21.5+ requires text components in data components (custom_name, lore) to be
+    # raw SNBT compounds, NOT JSON-encoded strings. Since `components` is already a real
+    # Python dict (with `name` / `lore` as lists of dicts thanks to generate_name /
+    # generate_lore), json.dumps produces the right structure directly. ensure_ascii=False
+    # keeps unicode (é, ●) as literal UTF-8 - old \uXXXX escapes broke (MC-279250).
+    components = json.dumps(components, ensure_ascii=False)
+    # custom_data fields like {"sapphire": 1} need the SNBT byte suffix: {sapphire: 1b}.
+    components = re.sub(r'"custom_data":\s*{([^}]+)}',
+                        lambda m: re.sub(r'(\s*"[^"]+"\s*:\s*)1', r'\g<1>1b', m.group(0)),
+                        components)
+
+    return components
+
+
+def extract_pokemon_name(functions: list) -> str:
+    pokemon_name = ''
     for name in functions[1]['name']:
-        if name['text'] not in predicate_list:
-           return name['text']
+        pokemon_name += name['text']
+        if name['text'] in predicate_list:
+            continue
+        else:
+            return pokemon_name
 
 
-def extract_evolution_name(functions:list) -> str:
+def extract_evolution_name(functions: list) -> str:
     evolution_line = functions[2]['lore'][0][0]['text']
     for searh_pattern in patterns["evolution_search_patterns"]:
         evolution_name = re.findall(searh_pattern, evolution_line)
@@ -27,22 +47,21 @@ def extract_evolution_name(functions:list) -> str:
             pokemon_name = repr(pokemon_name)
             pokemon_name = pokemon_name[1:-1]
             return pokemon_name
-    
+
     return 'Basic'
 
 
-def generate_name(elements:list) -> str:
-    return f'{elements}'
+def generate_name(elements: list) -> list:
+    # In MC 1.21.5+, custom_name must be a raw text component (compound or list of compounds),
+    # not a JSON-encoded string. Returning the raw list lets json.dumps serialize it as a
+    # proper SNBT list of compounds with lowercase booleans.
+    return elements
 
 
-def generate_lore(elements:list) -> list:
-    string = ""
-    for line in elements:
-        if string != "":
-            string += ","
-        string += "'" + str(line) + "'"
-    
-    return [string]
+def generate_lore(elements: list) -> list:
+    # Same reasoning as generate_name: lore is a list of text components in MC 1.21.5+,
+    # so we return the raw list and let json.dumps handle serialization.
+    return elements
 
 
 def trainer_weights(self) -> int:
@@ -52,7 +71,7 @@ def trainer_weights(self) -> int:
         'Rare': 1
     }
     weight = self.weight * multiplier[self.rarity]
-    
+
     return weight
 
 
@@ -60,28 +79,6 @@ def unescape_string(escaped_string: str) -> str:
     unescaped_string = escaped_string.encode().decode('unicode_escape')
     unescaped_string = unescaped_string.replace('\\,', ',')
     return unescaped_string
-
-
-def fix_json(components):
-    components = json.dumps(components)
-    components = re.sub(r'\["\'{', r"'[{", components)
-    components = re.sub(r"}'\"]", r"}]'", components)
-
-    components = re.sub(r'\["\'\[{', r"['[{", components)
-    components = re.sub(r'}]\'"]', r"}]']", components)
-
-    components = re.sub(r"'text': '((?:[^'\\]|\\.)*)'", r'"text":"\1"', components)
-    components = re.sub(r"'color': '((?:[^'\\]|\\.)*)'", r'"color":"\1"', components)
-    components = re.sub(r"'bold': ((?:[^'\\]|\\.)*)", r'"bold":\1', components)
-    components = re.sub(r"'italic': ((?:[^'\\]|\\.)*)", r'"italic":\1', components)
-    components = re.sub(r"'underlined': ((?:[^'\\]|\\.)*)", r'"underlined":\1', components)
-    components = re.sub(r"'text': \\\"(.*?)\\\"", r'"text":"\1"', components)
-    components = re.sub(r"(\"text\":\s*\"(.*?)\")", lambda m: m.group(1).replace("'", "\\'"), components)
-    components = re.sub(r'"custom_data":\s*{([^}]+)}',
-                    lambda m: re.sub(r'(\s*"[^"]+"\s*:\s*)1', r'\g<1>1b', m.group(0)),
-                    components)
-
-    return components
 
 
 class VillagerData:
@@ -99,7 +96,7 @@ class VillagerData:
         self.map_id = self.functions[0]['components']['map_id']
         self.custom_data = {pokemon_type: 1 for pokemon_type in self.functions[0]['components']['custom_data']}
         self.components = {
-            'hide_additional_tooltip': {},
+            'tooltip_display': {'hidden_components': ['map_id']},
             'custom_model_data': self.custom_model_data,
             'map_id': self.map_id,
             'custom_data': self.custom_data,
@@ -122,7 +119,7 @@ class TrainerData:
         self.map_id = self.functions[0]['components']['map_id']
         self.custom_data = {cd: 1 for cd in self.functions[0]['components']['custom_data']}
         self.components = {
-            'hide_additional_tooltip': {},
+            'tooltip_display': {'hidden_components': ['map_id']},
             'custom_model_data': self.custom_model_data,
             'map_id': self.map_id,
             'custom_data': self.custom_data,
@@ -143,7 +140,7 @@ class EnergyData:
         self.custom_model_data = self.functions[0]['components']['custom_model_data']
         self.map_id = self.functions[0]['components']['map_id']
         self.components = {
-            'hide_additional_tooltip': {},
+            'tooltip_display': {'hidden_components': ['map_id']},
             'custom_model_data': self.custom_model_data,
             'map_id': self.map_id,
             'custom_data': {'energy': 1},
@@ -151,3 +148,19 @@ class EnergyData:
             'lore': self.lore
         }
         self.components = fix_json(self.components)
+
+
+class SetCount:
+    def __init__(self, data: list) -> None:
+        energy_types = ['Grass', 'Fire', 'Water', 'Fighting', 'Psychic', 'Lightning', 'Darkness', 'Metal']
+        self.set_count = {
+            energy_type: {
+                'Common': 0,
+                'Uncommon': 0,
+                'Rare': 0
+            }
+            for energy_type in energy_types
+        }
+        for card in data:
+            if card.rarity in self.set_count:
+                self.set_count[card.rarity] += 1
